@@ -14,3 +14,13 @@ app.listen(3000, function(){
 app.get('/', function(req, res){
 	res.sendFile(__dirname + '/helloworld.html');
 });
+
+//initialize db
+const sqlite3 = require('sqlite3').verbose();
+
+let db = new sqlite3.Database('data.db', (err)=>{
+	if (err){
+		console.error(err.mesaage);
+	}
+	console.log('connected to data.db database');
+});
