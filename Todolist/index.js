@@ -6,6 +6,9 @@ const app = express();
 app.engine('.ejs', require('ejs').__express);
 app.set('view engine', 'ejs');
 
+// set default views folder
+app.set('views', __dirname + '/assets/views');
+
 // Directly serve all files in public/
 app.use(express.static('public'));
 
@@ -17,5 +20,5 @@ app.listen(3000, function(){
 });
 
 app.get('/', function(req, res){
-	res.sendFile(__dirname + '/helloworld.html');
+	res.render('app');
 });

@@ -4,7 +4,8 @@
   "description": "A simple todo list for \"aprg\"",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "gulp styles && node ./index.js"
   },
   "author": "",
   "license": "ISC",

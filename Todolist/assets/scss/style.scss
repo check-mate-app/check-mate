@@ -1,8 +1,8 @@
-body {
+// Variables
+@import 'variables/colors';
 
-  p {
-    color: red;
-    background: green;
-  }
+// Resets
+@import 'resets/reset';
 
-}
+// Content
+@import 'content/content';
