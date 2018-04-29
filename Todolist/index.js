@@ -22,10 +22,15 @@ app.get('/', function(req, res){
 	res.render('app');
 });
 
+
+
 app.get('/api/lists', function(req, res){
-	res.send(sqltoarray())
-  //res.send(JSON.stringify(data));
+	res.set('Content-Type', 'JSON');
+	res.send(new Buffer(sqltoarray()));
+	console.log(sqltoarray());
 });
+
+
 
 //initialize db
 const sqlite3 = require('sqlite3').verbose();
@@ -40,22 +45,37 @@ let db = new sqlite3.Database('data.db', (err)=>{
 
 
 
+//FOLLOWING FUNCTION READS THE DATA.DB TABLE CALLED lists
+// IT GETS ALL ROW-ELEMENTS BUT RETURNING THEM DOESNT WORK YES 
 
-function sqltoarray()
-{
-
-
-	db.each(`SELECT * FROM lists`,  (err, row) => {
-	if (err) {
-	console.error(err.message);
-	}
-	// row ist ein Objekt mit den Felder als Properties
-
-	const id = row.id;
-	const name = row.name;
-	const done = row.done;
-	const owner = row.owner;
-	console.log("ID ", id," NAME: ", name,"  DONE: ",done, "  OWNER: ",owner);
-	});
-
-};
+// function sqltoarray()
+// {
+// 	let id = 0;
+// 	let name = ' ';
+// 	let done = 0;
+// 	let owner = ' ';
+//
+// 	var toStringify = [];
+//
+// 	db.each(`SELECT * FROM lists`,  (err, row) => {
+// 		if (err) {
+// 			console.error(err.message);
+// 		}
+// 		// row ist ein Objekt mit den Feldern als Properties
+//
+// 	 	id = row.id;
+// 	 	name = row.name;
+// 	 	done = row.done;
+// 	 	owner = row.owner;
+//
+// 		toStringify = ["pushed"];
+// 		console.log(toStringify);
+//
+// 	//je obj ein neuer {} im JSON string
+// 	//toStringify = toStringify.push();
+//
+// });
+//
+// 		return(JSON.stringify(toStringify));
+//
+// };
