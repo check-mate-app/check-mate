@@ -43,20 +43,19 @@ let db = new sqlite3.Database('data.db', (err)=>{
 
 function sqltoarray()
 {
-	const id = null;
-	const name = null;
-	const done = null;
-	const owner = null;
-	db.each(`SELECT * FROM lists`, function (err, row) {
+
+
+	db.each(`SELECT * FROM lists`,  (err, row) => {
 	if (err) {
 	console.error(err.message);
 	}
 	// row ist ein Objekt mit den Felder als Properties
+
 	const id = row.id;
 	const name = row.name;
-	const done = row.preis;
+	const done = row.done;
 	const owner = row.owner;
-return name ;
+	console.log("ID ", id," NAME: ", name,"  DONE: ",done, "  OWNER: ",owner);
 	});
 
 };
