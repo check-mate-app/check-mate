@@ -1,7 +1,6 @@
 const express = require('express');
 const app = express();
 
-
 // initialize ejs template engine
 app.engine('.ejs', require('ejs').__express);
 app.set('view engine', 'ejs');
@@ -23,6 +22,11 @@ app.get('/', function(req, res){
 	res.render('app');
 });
 
+app.get('/api/lists', function(req, res){
+	res.send(sqltoarray())
+  //res.send(JSON.stringify(data));
+});
+
 //initialize db
 const sqlite3 = require('sqlite3').verbose();
 
@@ -32,3 +36,27 @@ let db = new sqlite3.Database('data.db', (err)=>{
 	}
 	console.log('connected to data.db database');
 });
+
+
+
+
+
+function sqltoarray()
+{
+	const id = null;
+	const name = null;
+	const done = null;
+	const owner = null;
+	db.each(`SELECT * FROM lists`, function (err, row) {
+	if (err) {
+	console.error(err.message);
+	}
+	// row ist ein Objekt mit den Felder als Properties
+	const id = row.id;
+	const name = row.name;
+	const done = row.preis;
+	const owner = row.owner;
+return name ;
+	});
+
+};
