@@ -35,7 +35,7 @@ app.get('/', function(req, res){
 });
 
 
-
+//SHOW LISTS
 app.get('/api/lists', function(req, res){
 	db.all(`SELECT * FROM lists`,  function(err, rows) {
 		if (err) {
@@ -46,7 +46,9 @@ app.get('/api/lists', function(req, res){
 	});
 });
 
-//delete a list from lists table
+
+
+////DELETE
 app.delete('/api/lists/:id',function(req,res){
 
 var id = req.params.id;
@@ -59,15 +61,34 @@ console.log("deleted item with id of: "+ id);
 res.send({})
 });
 
-//add a new list to the lists table
-app.post('/api/lists', function (req,res){
-	//variable could need to be parsed by JSON.parse(var) when softcoded
-	//tom sagt body parser
 
+//GET LIST BY ID
+app.get('/api/lists/:id', function(req, res){
+	id = req.params.id;
+	id = id.slice(1);
+	console.log("ID " + id);
+
+	space = "SELECT * FROM lists WHERE id ="+(id.toString());
+	db.all(space,function(err,rows){
+		if (err){console.log(err)};
+		console.log("log");
+		res.send(rows);
+	})
+});
+
+
+//ADD
+app.post('/api/lists', function (req,res){
 	console.log(req.body);
 	let space = `INSERT INTO lists(name, done, owner) VALUES (?, ?, ?)`;
 	db.run(space, [req.body.name, req.body.done, req.body.owner], function(err){
-		console.log(err);
+		if
+		 (err) {console.log(err);}
 	});
-	res.send();
+	space = "SELECT * FROM lists WHERE name = "+"'"+req.body.name+"'";
+	db.all(space,function(err,rows){
+		if (err){console.log(err)};
+		console.log("log");
+		res.send(rows);
+	})
 });
