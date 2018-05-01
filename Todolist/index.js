@@ -47,8 +47,16 @@ app.get('/api/lists', function(req, res){
 });
 
 //delete a list from lists table
-app.delete('/api/lists',function(req,res,id){
-	space = 'DELETE from lists WHERE id = ${id}';
+app.delete('/api/lists/:id',function(req,res){
+
+var id = req.params.id;
+id = id.slice(1);
+	space = "DELETE from lists WHERE id ="+(id.toString());
+	db.run(space, function(err){
+		if (err){console.log(err)}
+	})
+console.log("deleted item with id of: "+ id);
+res.send({})
 });
 
 //add a new list to the lists table
@@ -63,7 +71,3 @@ app.post('/api/lists', function (req,res){
 	});
 	res.send();
 });
-
-
-//FOLLOWING FUNCTION READS THE DATA.DB TABLE CALLED lists
-//IT GETS ALL ROW-ELEMENTS BUT RETURNING THEM DOESNT WORK YES
