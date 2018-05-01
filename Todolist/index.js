@@ -73,7 +73,28 @@ app.get('/api/lists/:id', function(req, res){
 		if (err){console.log(err)};
 		console.log("log");
 		res.send(rows);
+		//missing: items on the list are not included in res.send yet
 	})
+});
+
+//UPDATE
+
+app.put('/api/lists/:id',function(req,res){
+
+	id = req.params.id;
+	id = id.slice(1);
+
+	space = "UPDATE lists SET name="+"'"+req.body.name+"'"+" WHERE id ="+(id.toString()) ;
+	db.all(space,function(err,rows){
+		if (err){console.log(err)};
+	})
+	space = "SELECT * FROM lists WHERE name = "+"'"+req.body.name+"'";
+	db.all(space,function(err,rows){
+		if (err){console.log(err)};
+		console.log("log");
+		res.send(rows);
+	})
+
 });
 
 
