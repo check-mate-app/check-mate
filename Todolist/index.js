@@ -12,12 +12,12 @@ app.set('views', __dirname + '/assets/views');
 app.use(express.static('public'));
 
 const bodyParser = require('body-parser');
-app.use(bodyParser.urlencoded({extended: true}));
+app.use(bodyParser.json());
 
 //initialize db
 const sqlite3 = require('sqlite3').verbose();
 
-let db = new sqlite3.Database('data.db', (err)=>{
+const db = new sqlite3.Database('data.db', (err)=>{
 	if (err){
 		console.error(err.mesaage);
 	}
@@ -37,23 +37,28 @@ app.get('/', function(req, res){
 
 
 app.get('/api/lists', function(req, res){
-	res.set('Content-Type', 'JSON');
-	res.send(new Buffer(sqltoarray()));
-	console.log(sqltoarray());
+	db.all(`SELECT * FROM lists`,  function(err, rows) {
+		if (err) {
+			console.error(err.message);
+		}else{
+			res.send(rows);
+		}
+	});
 });
 
+//delete a list from lists table
+app.delete('/api/lists',function(req,res,id){
+	space = 'DELETE from lists WHERE id = ${id}';
+});
 
-app.post('/api/lists', function (req,res,incomingList){
+//add a new list to the lists table
+app.post('/api/lists', function (req,res){
 	//variable could need to be parsed by JSON.parse(var) when softcoded
-	 incomingList ={
-		"id": 42,
-  "name": "Die Ultimative ToDo-Liste von Edi",
-  "owner": "xxxfrunobulaxedixxx",
-  "done": 0
-	};
+	//tom sagt body parser
 
+	console.log(req.body);
 	let space = `INSERT INTO lists(name, done, owner) VALUES (?, ?, ?)`;
-	db.run(space, [incomingList.name, incomingList.done, incomingList.owner], function(err){
+	db.run(space, [req.body.name, req.body.done, req.body.owner], function(err){
 		console.log(err);
 	});
 	res.send();
@@ -62,19 +67,3 @@ app.post('/api/lists', function (req,res,incomingList){
 
 //FOLLOWING FUNCTION READS THE DATA.DB TABLE CALLED lists
 //IT GETS ALL ROW-ELEMENTS BUT RETURNING THEM DOESNT WORK YES
-
-function sqltoarray(){
-	let insert = "[]";
-	db.each(`SELECT * FROM lists`,  (err, row) => {
-		if (err) {
-			console.error(err.message);
-		}
-		// row ist ein Objekt mit den Feldern als Properties
-
-	 let id = row.id;
-	 let name = row.name;
-	 let done = row.done;
-	 let owner = row.owner;
-	});
-	return insert;
-};
