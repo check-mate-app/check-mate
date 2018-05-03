@@ -10,6 +10,3 @@ To install, simply open the `Todolist/`-Folder in the command line (or power she
 
 ## Run
 In the `Todolist/`-Folder, run `npm run dev`.
-
-## Additional information
-To compile the styles, run `gulp` in the command line. It will watch for changes and compile.
