@@ -16,7 +16,6 @@ module.exports = function (app, db) {
   app.delete('/api/lists/:id', function(req, res) {
 
     var id = req.params.id;
-    id = id.slice(1);
     space = "DELETE from lists WHERE id =" + (id.toString());
     db.run(space, function(err) {
       if (err) {
@@ -31,7 +30,6 @@ module.exports = function (app, db) {
   //GET LIST BY ID
   app.get('/api/lists/:id', function(req, res) {
     id = req.params.id;
-    id = id.slice(1);
     console.log("ID " + id);
 
     space = "SELECT * FROM lists WHERE id =" + (id.toString());
@@ -50,7 +48,6 @@ module.exports = function (app, db) {
   app.put('/api/lists/:id', function(req, res) {
 
     id = req.params.id;
-    id = id.slice(1);
 
     space = "UPDATE lists SET name=" + "'" + req.body.name + "'" + " WHERE id =" + (id.toString());
     db.all(space, function(err, rows) {
