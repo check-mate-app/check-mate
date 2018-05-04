@@ -1,0 +1,228 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/app-layout/app-drawer/app-drawer.html">
+<link rel="import" href="../bower_components/app-layout/app-drawer-layout/app-drawer-layout.html">
+<link rel="import" href="../bower_components/app-layout/app-header/app-header.html">
+<link rel="import" href="../bower_components/app-layout/app-header-layout/app-header-layout.html">
+<link rel="import" href="../bower_components/app-layout/app-scroll-effects/app-scroll-effects.html">
+<link rel="import" href="../bower_components/app-layout/app-toolbar/app-toolbar.html">
+<link rel="import" href="../bower_components/app-route/app-location.html">
+<link rel="import" href="../bower_components/app-route/app-route.html">
+<link rel="import" href="../bower_components/iron-pages/iron-pages.html">
+<link rel="import" href="../bower_components/iron-selector/iron-selector.html">
+<link rel="import" href="../bower_components/paper-icon-button/paper-icon-button.html">
+<link rel="import" href="../bower_components/paper-item/paper-item.html">
+<link rel="import" href="../bower_components/paper-item/paper-icon-item.html">
+<link rel="import" href="../bower_components/paper-item/paper-item-body.html">
+<link rel="import" href="../bower_components/paper-listbox/paper-listbox.html">
+<link rel="import" href="components/mdi.html">
+
+<link rel="lazy-import" href="lists-view.html">
+<link rel="lazy-import" href="my-view2.html">
+<link rel="lazy-import" href="my-view3.html">
+<link rel="lazy-import" href="my-view404.html">
+<link rel="lazy-import" href="my-new-view.html">
+
+<dom-module id="my-app">
+  <template>
+    <style>
+      :host {
+        --app-primary-color: #4285f4;
+        --app-secondary-color: black;
+
+      }
+
+      app-drawer-layout:not([narrow]) [drawer-toggle] {
+        display: none;
+      }
+
+      app-header {
+        color: #000;
+        /* background-color: var(--app-primary-color); */
+        background-color: #fff;
+      }
+
+      app-header paper-icon-button {
+        --paper-icon-button-ink-color: white;
+      }
+
+      .drawer-list {
+        /* margin: 0 20px; */
+      }
+
+      .drawer-list a paper-icon-item iron-icon {
+        margin-right: 34px;
+        color: #999;
+      }
+
+      .drawer-list a {
+        text-decoration: none;
+        color: inherit;
+
+        display: inline-block;
+        width: 100%;
+      }
+
+      .drawer-list a::-moz-focus-inner {
+        border: 0;
+      }
+
+      .drawer-list a:focus {outline:0 !important;}
+
+      .drawer-list a.iron-selected {
+        font-weight: bold;
+      }
+
+      .drawer-list a.iron-selected {
+        background: #e8e8e8;
+
+      }
+
+      .drawer-list a.iron-selected paper-icon-item iron-icon {
+        color: #000;
+      }
+
+      .drawer-list .divider {
+        display: block;
+        width: 100%;
+        border-top: 1px solid #e4e4e4;
+        margin: 8px 0;
+      }
+
+      app-toolbar [main-title] {
+        margin-left: 24px;
+      }
+    </style>
+
+    <app-location
+        route="{{route}}"
+        url-space-regex="^[[rootPath]]">
+    </app-location>
+
+    <app-route
+        route="{{route}}"
+        pattern="[[rootPath]]:page"
+        data="{{routeData}}"
+        tail="{{subroute}}">
+    </app-route>
+
+    <app-drawer-layout fullbleed narrow="{{narrow}}">
+      <!-- Drawer content -->
+      <app-drawer id="drawer" slot="drawer" swipe-open="[[narrow]]">
+        <app-toolbar>Menu</app-toolbar>
+
+        <paper-listbox selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation">
+
+        <a name="lists-view" href="[[rootPath]]lists-view">
+            <paper-icon-item>
+              <iron-icon icon="mdi:inbox-multiple" item-icon slot="item-icon"></iron-icon><!--
+              --><span>My Lists</span>
+            </paper-icon-item>
+        </a>
+
+
+        <a name="my-view2" href="[[rootPath]]my-view2">
+            <paper-icon-item>
+              <iron-icon icon="mdi:circle" item-icon slot="item-icon"></iron-icon><!--
+              --><span>My View 2</span>
+            </paper-icon-item>
+        </a>
+
+        <a name="my-view3" href="[[rootPath]]my-view3">
+            <paper-icon-item>
+              <iron-icon icon="mdi:circle" item-icon slot="item-icon"></iron-icon><!--
+              --><span>My View 3</span>
+            </paper-icon-item>
+        </a>
+
+        <div class="divider"></div>
+
+
+        </paper-listbox>
+
+      </app-drawer>
+
+      <!-- Main content -->
+      <app-header-layout>
+
+        <app-header slot="header" fixed effects="waterfall" reveals>
+          <app-toolbar>
+            <paper-icon-button icon="mdi:menu" drawer-toggle></paper-icon-button>
+            <div main-title>My Lists</div>
+          </app-toolbar>
+        </app-header>
+
+        <iron-pages
+            selected="[[page]]"
+            attr-for-selected="name"
+            fallback-selection="view404"
+            role="main">
+          <lists-view name="lists-view"></lists-view>
+          <my-view2 name="my-view2"></my-view2>
+          <my-view3 name="my-view3"></my-view3>
+          <my-view404 name="my-view404"></my-view404>
+          <my-new-view name="new-view"></my-view404>
+        </iron-pages>
+      </app-header-layout>
+    </app-drawer-layout>
+  </template>
+
+  <script>
+    // Gesture events like tap and track generated from touch will not be
+    // preventable, allowing for better scrolling performance.
+    Polymer.setPassiveTouchGestures(true);
+
+    class MyApp extends Polymer.Element {
+      static get is() {
+        return 'my-app';
+      }
+
+      static get properties() {
+        return {
+          page: {
+            type: String,
+            reflectToAttribute: true,
+            observer: '_pageChanged',
+          },
+          routeData: Object,
+          subroute: Object,
+          // This shouldn't be neccessary, but the Analyzer isn't picking up
+          // Polymer.Element#rootPath
+          rootPath: String,
+        };
+      }
+
+      static get observers() {
+        return [
+          '_routePageChanged(routeData.page)',
+        ];
+      }
+
+      _routePageChanged(page) {
+        // If no page was found in the route data, page will be an empty string.
+        // Default to 'lists-view' in that case.
+        this.page = page || 'lists-view';
+
+        // Close a non-persistent drawer when the page & route are changed.
+        if (!this.$.drawer.persistent) {
+          this.$.drawer.close();
+        }
+      }
+
+      _pageChanged(page) {
+        // Load page import on demand. Show 404 page if fails
+        const resolvedPageUrl = this.resolveUrl(page + '.html');
+        Polymer.importHref(
+          resolvedPageUrl,
+          null,
+          this._showPage404.bind(this),
+          true);
+      }
+
+      _showPage404() {
+        this.page = 'my-view404';
+      }
+    }
+
+    window.customElements.define(MyApp.is, MyApp);
+  </script>
+</dom-module>

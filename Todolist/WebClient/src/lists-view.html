@@ -1,0 +1,68 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+
+<dom-module id="lists-view">
+  <template>
+    <style>
+      :host {
+        display: block;
+      }
+
+    paper-listbox.lists-list {
+      margin-top: 5px;
+    }
+
+    paper-listbox.lists-list a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    paper-listbox.lists-list a paper-icon-item {
+      padding: 0 24px;
+
+      border-bottom: 1px solid #e4e4e4;
+    }
+
+    paper-listbox.lists-list a:first-child paper-icon-item {
+      border-top: 1px solid #e4e4e4;
+    }
+
+    </style>
+
+    <!-- content: -->
+
+<paper-listbox class="lists-list">
+  <a href="#">
+  <paper-icon-item>
+    <iron-icon icon="mdi:cart" item-icon slot="item-icon"></iron-icon>
+    <paper-item-body two-line>
+      <div>Groceries</div>
+      <div secondary>Shared with: Family</div>
+    </paper-item-body>
+    <paper-icon-button icon="mdi:chevron-right" alt="favourite this!">
+    </paper-icon-button>
+  </paper-icon-item>
+  </a>
+  <a href="#">
+  <paper-icon-item>
+    <iron-icon icon="mdi:checkbox-multiple-marked-circle-outline" item-icon slot="item-icon"></iron-icon>
+    <paper-item-body two-line>
+      <div>Todo-List</div>
+    </paper-item-body>
+    <paper-icon-button icon="mdi:chevron-right" alt="favourite this!">
+    </paper-icon-button>
+  </paper-icon-item>
+  </a>
+</paper-listbox>
+
+
+    <!-- /content -->
+  </template>
+
+  <script>
+    class ListsView extends Polymer.Element {
+      static get is() { return 'lists-view'; }
+    }
+
+    window.customElements.define(ListsView.is, ListsView);
+  </script>
+</dom-module>
