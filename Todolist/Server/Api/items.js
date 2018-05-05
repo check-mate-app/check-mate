@@ -44,5 +44,56 @@ module.exports = function(app,db){
       res.send([]);
     })
 
+    //del item by id
+    app.delete('/api/items/:id', function(req, res) {
+
+      var id = req.params.id;
+      space = "DELETE FROM items WHERE id =" + (id.toString());
+      db.run(space, function(err) {
+        if (err) {
+          console.log(err)
+        }
+      })
+      space = "DELETE FROM item_list_relation WHERE item_id="+(id.toString());
+      db.run(space, function(err){
+        if (err){console.log(err)}
+      })
+      console.log("deleted item with id of: " + id);
+      res.send({})
+    });
+
+//update content
+app.put('/api/items/:id', function(req, res) {
+
+  id = req.params.id;
+
+  space = "UPDATE items SET content=" + "'" + req.body.content + "'" + " WHERE id =" + (id.toString());
+  db.all(space, function(err, rows) {
+    if (err) {
+      console.log(err)
+    };
+  })
+  space = "SELECT * FROM items WHERE id = " + "'" + req.params.id + "'";
+  db.all(space, function(err, rows) {
+    if (err) {
+      console.log(err)
+    };
+    res.send(rows);
+  })
+});
+
+//gett item by id
+app.get('/api/items/:id', function(req, res) {
+  id = req.params.id;
+  space = "SELECT * FROM items WHERE id =" + (id.toString());
+  db.all(space, function(err, rows) {
+    if (err) {
+      console.log(err)
+    };
+    res.send(rows);
+    //missing: items on the list are not included in res.send yet
+  })
+});
+
 
 }
