@@ -13,10 +13,7 @@ Install Bower: `npm install -g bower`.
 To install, simply open the `Todolist/`-Folder in the command line (or power shell) and type `npm install`.
 
 ### Front-End
-Go to `Todolist/WebClient/` and run `bower install`. You are now ready to build the frontend.
+Go to `Todolist/WebClient/` and run `bower install`. You are now ready to run.
 
 ## Run
 In the `Todolist/`-Folder, run `npm run dev`.
-
-### Front-End
-Go to `Todolist/WebClient/` and run `polymer build`. You are now ready to run the server (see above) and view the frontend.
