@@ -34,19 +34,15 @@ module.exports = function(app,db){
           if(err){console.log(err)}
           console.log("ILR REQ BODY ID "+listID);
           console.log("function "+ itemID);
+
         })
       })
     })
-
-    //ausgabe
-    space = "SELECT * FROM items WHERE id = " + "'" + req.body.name + "'";
-    db.all(space, function(err, rows) {
-      if (err) {
-        console.log(err)
-      };
-      console.log("log");
-      res.send(rows);
+    //content
+    //done
+    //item id
+      res.send([]);
     })
-  });
+
 
 }
