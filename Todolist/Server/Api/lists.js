@@ -1,4 +1,5 @@
 module.exports = function (app, db) {
+
   //SHOW LISTS
   app.get('/api/lists', function(req, res) {
     db.all(`SELECT * FROM lists`, function(err, rows) {
@@ -70,8 +71,8 @@ module.exports = function (app, db) {
   //ADD
   app.post('/api/lists', function(req, res) {
     console.log(req.body);
-    let space = `INSERT INTO lists(name, done, owner) VALUES (?, ?, ?)`;
-    db.run(space, [req.body.name, req.body.done, req.body.owner], function(err) {
+    let space = `INSERT INTO lists(name, icon, owner) VALUES (?, ?, ?)`;
+    db.run(space, [req.body.name, req.body.icon, req.body.owner], function(err) {
       if (err) {
         console.log(err);
       }
