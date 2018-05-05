@@ -30,9 +30,9 @@ app.listen(3000, function(){
 	console.log('listening on port 3000');
 });
 
+// import api
+require('./Api/_api.js')(app, db);
+
 app.get('*', function(req, res){
 	res.sendFile(path.resolve(INDEX_HTML));
 });
-
-// import api
-require('./Api/_api.js')(app, db);
