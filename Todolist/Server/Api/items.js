@@ -40,7 +40,7 @@ module.exports = function(app,db){
     })
     //content
     //done
-    //item id
+    //list id
       res.send([]);
     })
 
