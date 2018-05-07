@@ -43,14 +43,9 @@ module.exports = function(app,db){
     db.run(space, function(err){
       if (err) {
         console.log(err)
-      }
-    });
-
-    space = `DELETE FROM item_list_relation WHERE user_id=` + (id.toString());
-    db.run(space, function(err){
-      if (err) {
-        console.log(err)
-    }
+      };
     });
     res.send({})
   });
+
+};
