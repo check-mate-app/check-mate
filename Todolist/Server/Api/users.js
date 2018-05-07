@@ -49,10 +49,3 @@ module.exports = function(app,db){
   });
 
 };
-
-//Fragen:
-//1.Wann Semikolon
-//2.Wann let/war
-//3.Wann `` oder "" oder ''
-//4.Wann CAPS
-//5.Brauchen wir noch einen table f
