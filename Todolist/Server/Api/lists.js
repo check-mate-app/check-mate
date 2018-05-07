@@ -67,6 +67,17 @@ module.exports = function (app, db) {
 
   });
 
+//send all items belonging to a list
+app.get('/api/lists/:listid/items',function(req,res){
+
+space = 'SELECT * FROM items WHERE listid='+req.params.listid;
+db.all(space,function(err,rows){
+  if (err){console.log(err)}
+  res.send(rows);
+})
+
+});
+
 
   //ADD
   app.post('/api/lists', function(req, res) {
