@@ -1,0 +1,55 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/paper-checkbox/paper-checkbox.html">
+<link rel="import" href="shared-styles.html">
+
+<dom-module id="list-detail-item-view">
+  <template>
+    <style include="shared-styles">
+      :host {
+        display: block;
+      }
+
+    </style>
+
+    <!-- api -->
+
+    <iron-ajax
+      id="getItems"
+      auto=""
+      url="/api/items"
+      method="get"
+      handle-as="json"
+      last-response="{{items}}">
+    </iron-ajax>
+
+    <!-- /api -->
+
+    <!-- content: -->
+    <div class="general-list">
+      <template is="dom-repeat" items="[[items]]">
+      <paper-icon-item>
+        <!-- <iron-icon icon="mdi:checkbox" item-icon slot="item-icon"></iron-icon> -->
+        <template is="dom-if" if="{{!item.done}}">
+          <paper-checkbox slot="item-icon"></paper-checkbox>
+        </template>
+        <template is="dom-if" if="{{item.done}}">
+          <paper-checkbox slot="item-icon" checked></paper-checkbox>
+        </template>
+
+        <paper-item-body>
+          <div>[[item.content]]</div>
+        </paper-item-body>
+      </paper-icon-item>
+    </template>
+  </div>
+    <!-- /content -->
+  </template>
+
+  <script>
+    class ListDetailItemView extends Polymer.Element {
+      static get is() { return 'list-detail-item-view'; }
+    }
+
+    window.customElements.define(ListDetailItemView.is, ListDetailItemView);
+  </script>
+</dom-module>
