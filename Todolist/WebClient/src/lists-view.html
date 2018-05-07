@@ -28,30 +28,36 @@
 
     </style>
 
+    <!-- api -->
+
+    <iron-ajax
+      id="getLists"
+      auto=""
+      url="/api/lists"
+      method="get"
+      handle-as="json"
+      last-response="{{lists}}">
+    </iron-ajax>
+
+    <!-- /api -->
+
     <!-- content: -->
 
 <paper-listbox class="lists-list">
+  <template is="dom-repeat" items="[[lists]]">
   <a href="#">
   <paper-icon-item>
-    <iron-icon icon="mdi:cart" item-icon slot="item-icon"></iron-icon>
+    <iron-icon icon="mdi:[[item.icon]]" item-icon slot="item-icon"></iron-icon>
     <paper-item-body two-line>
-      <div>Groceries</div>
-      <div secondary>Shared with: Family</div>
+      <div>[[item.name]]</div>
+      <div secondary>Owner: [[item.owner]]</div>
     </paper-item-body>
-    <paper-icon-button icon="mdi:chevron-right" alt="favourite this!">
+    <paper-icon-button icon="mdi:chevron-right">
     </paper-icon-button>
   </paper-icon-item>
   </a>
-  <a href="#">
-  <paper-icon-item>
-    <iron-icon icon="mdi:checkbox-multiple-marked-circle-outline" item-icon slot="item-icon"></iron-icon>
-    <paper-item-body two-line>
-      <div>Todo-List</div>
-    </paper-item-body>
-    <paper-icon-button icon="mdi:chevron-right" alt="favourite this!">
-    </paper-icon-button>
-  </paper-icon-item>
-  </a>
+</template>
+
 </paper-listbox>
 
 
