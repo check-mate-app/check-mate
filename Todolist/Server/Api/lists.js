@@ -11,6 +11,18 @@ module.exports = function (app, db) {
     });
   });
 
+  // //SHOW ALL LISTS WHERE USER IS OWNER
+  // app.get('/api/lists', function(req, res) {
+  //   let userLists = req.body.owner;
+  //   let space = "SELECT * FROM lists WHERE owner = '" + userLists + "'";
+  //   db.all(space, function(err, rows) {
+  //     if (err) {
+  //       console.error(err.message);
+  //     } else {
+  //       res.send(rows);
+  //     }
+  //   });
+  // });
 
 
   ////DELETE
