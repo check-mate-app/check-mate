@@ -12,6 +12,13 @@ const sqlite3 = require('sqlite3').verbose();
 
 const app = express();
 
+const session = require('express-session');
+app.use(session({
+	secret: 'quatroposi',
+	resave: false,
+	saveUnitialized: true
+}));
+
 
 // Directly serve all files in public/
 app.use(express.static(path.resolve(STATIC_FOLDER)));
