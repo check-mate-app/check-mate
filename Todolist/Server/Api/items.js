@@ -71,6 +71,24 @@ app.put('/api/items/:id', function(req, res) {
   })
 });
 
+//mark item as done
+app.put('/api/items/:id/done',function(req,res){
+  space = "UPDATE items SET done= 1 WHERE id = " + "'" + req.params.id + "'";
+  db.run(space, function(err){
+    if (err){console.log(err)}
+    res.send([]);
+  });
+});
+
+//mark item as undone
+app.put('/api/items/:id/undone',function(req,res){
+  space = "UPDATE items SET done= 0 WHERE id = " + "'" + req.params.id + "'";
+  db.run(space, function(err){
+    if (err){console.log(err)}
+    res.send([]);
+  });
+});
+
 //gett item by id
 app.get('/api/items/:id', function(req, res) {
   id = req.params.id;
