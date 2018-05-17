@@ -1,5 +1,7 @@
 module.exports = function(app,db){
 
+ const passwordHash = require('password-hash');
+
   //Show all users
   app.get('/api/users',function(req, res){
     db.all(`SELECT * FROM users`, function(err, rows){
@@ -23,10 +25,11 @@ module.exports = function(app,db){
     });
   });
 
-//Add new user
+//Add new user   sign up
   app.post('/api/users', function(req, res){
+    let pw = passwordHash.generate(req.body.password);
     let space = `INSERT INTO users (name, password, email) VALUES (?, ?, ?)`;
-    db.run(space,[req.body.name,req.body.password,req.body.email], function(err){
+    db.run(space,[req.body.name,pw,req.body.email], function(err){
       if (err) {
         console.log(err)
       }
@@ -71,4 +74,28 @@ module.exports = function(app,db){
     });
 
   });
+
+    //login
+
+    app.post('/api/users/login', function(req, res){
+       id = req.body.id;
+      let pw = passwordHash.generate(req.body.pw);
+       name = req.body.name;
+       console.log(pw);
+
+       space = "SELECT * FROM users WHERE password="+"'"+ pw + "'";
+       db.all(space,function(err, rows){
+         if (err){console.log(err)}
+         if (rows){
+           console.log("pwfound");
+
+
+           space = `SELECT * FROM users WHERE id =` + (id.toString());
+           db.all(space, function(err, rows) {
+           if (err) {console.log(err)}
+           res.send(rows);
+           })
+         };
+       });
+     });
 };
