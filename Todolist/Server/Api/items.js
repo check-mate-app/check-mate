@@ -1,7 +1,7 @@
 module.exports = function(app,db){
 
   //SHOW ALL items
-  app.get('/api/items/',function(req,res){
+  app.get('/api/items',function(req,res){
     db.all(`SELECT * FROM items`, function(err, rows) {
       if (err) {
         console.error(err.message);
@@ -17,8 +17,8 @@ module.exports = function(app,db){
     console.log(req.body.listID);
     let listID = req.body.listID;
 
-    let space = `INSERT INTO items(content, done) VALUES (?, ?)`;
-    db.run(space, [req.body.content, req.body.done], function(err) {
+    let space = `INSERT INTO items(listid,content, done) VALUES (?, ?,?)`;
+    db.run(space, [req.body.listid,req.body.content, req.body.done], function(err) {
       if (err) {console.log(err)}
 
       let ext = 0;
@@ -29,18 +29,11 @@ module.exports = function(app,db){
         }
         let itemID = row.id;
 
-        space = 'INSERT INTO item_list_relation( list_id, item_id) VALUES(?, ?)';
-        db.run(space, [listID,itemID], function(err){
-          if(err){console.log(err)}
-          console.log("ILR REQ BODY ID "+listID);
-          console.log("function "+ itemID);
-
-        })
       })
     })
     //content
     //done
-    //item id
+    //list id
       res.send([]);
     })
 
@@ -53,10 +46,6 @@ module.exports = function(app,db){
         if (err) {
           console.log(err)
         }
-      })
-      space = "DELETE FROM item_list_relation WHERE item_id="+(id.toString());
-      db.run(space, function(err){
-        if (err){console.log(err)}
       })
       console.log("deleted item with id of: " + id);
       res.send({})
@@ -80,6 +69,24 @@ app.put('/api/items/:id', function(req, res) {
     };
     res.send(rows);
   })
+});
+
+//mark item as done
+app.put('/api/items/:id/done',function(req,res){
+  space = "UPDATE items SET done= 1 WHERE id = " + "'" + req.params.id + "'";
+  db.run(space, function(err){
+    if (err){console.log(err)}
+    res.send([]);
+  });
+});
+
+//mark item as undone
+app.put('/api/items/:id/undone',function(req,res){
+  space = "UPDATE items SET done= 0 WHERE id = " + "'" + req.params.id + "'";
+  db.run(space, function(err){
+    if (err){console.log(err)}
+    res.send([]);
+  });
 });
 
 //gett item by id
