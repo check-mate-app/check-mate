@@ -34,6 +34,14 @@
       handle-as="json">
     </iron-ajax>
 
+    <iron-ajax
+      id="addItem"
+      url="/api/items"
+      method="post"
+      content-type="application/json"
+      handle-as="json">
+    </iron-ajax>
+
     <!-- /api -->
 
     <!-- content: -->
@@ -54,6 +62,9 @@
       </paper-icon-item>
     </template>
   </div>
+
+  <paper-fab icon="mdi:plus" class="generic-fab" on-click="openAddDialog"></paper-fab>
+
     <!-- /content -->
   </template>
 
@@ -73,8 +84,25 @@
 
         if(checked) setItemState.url = "/api/items/" + target.item.id + "/done"
         else setItemState.url = "/api/items/" + target.item.id + "/undone"
-        
+
         let request = setItemState.generateRequest()
+      }
+
+      openAddDialog(e) {
+        let addText = prompt("What do you want to add to this list?")
+        console.log(addText)
+
+        let data = {
+          listid: this.routeData.listid,
+          content: addText,
+          done: 0
+        }
+
+        addItem.body = data
+        addItem.generateRequest()
+
+        getItems.generateRequest()
+
       }
 
     }
