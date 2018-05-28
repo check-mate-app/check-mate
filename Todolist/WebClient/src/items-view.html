@@ -28,6 +28,12 @@
       last-response="{{items}}">
     </iron-ajax>
 
+    <iron-ajax
+      id="setItemState"
+      method="put"
+      handle-as="json">
+    </iron-ajax>
+
     <!-- /api -->
 
     <!-- content: -->
@@ -36,10 +42,10 @@
       <paper-icon-item>
         <!-- <iron-icon icon="mdi:checkbox" item-icon slot="item-icon"></iron-icon> -->
         <template is="dom-if" if="{{!item.done}}">
-          <paper-checkbox slot="item-icon"></paper-checkbox>
+          <paper-checkbox slot="item-icon" on-change="toggleTask" data-id="[[item.id]]"></paper-checkbox>
         </template>
         <template is="dom-if" if="{{item.done}}">
-          <paper-checkbox slot="item-icon" checked></paper-checkbox>
+          <paper-checkbox slot="item-icon" checked on-change="toggleTask" data-id="[[item.id]]"></paper-checkbox>
         </template>
 
         <paper-item-body>
@@ -60,6 +66,16 @@
         route: Object,
         routeData: Object,
       }}
+
+      toggleTask(e){
+        let target = e.model
+        let checked = e.target.checked
+
+        if(checked) setItemState.url = "/api/items/" + target.item.id + "/done"
+        else setItemState.url = "/api/items/" + target.item.id + "/undone"
+        
+        let request = setItemState.generateRequest()
+      }
 
     }
 
