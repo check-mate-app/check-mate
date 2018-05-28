@@ -10,20 +10,28 @@ module.exports = function(app,db){
     // name aus liste suchen
     // pw da wo name vergleichen
     let pw = req.body.password;
-    console.log(pw);
-    let name = req.body.name;
-    console.log(name);
+    console.log("pw: "+pw);
     let id = req.body.id;
-    console.log(id);
+    console.log("id: "+id);
 
-    if ()
-    passwordHash.verify(pw, hashedPassword)
+space = 'SELECT password FROM users WHERE id ='+(id.toString());
+db.all(space,function(err,rows){
+  if (err){console.log(err)}
+  console.log("DB: "+ rows);
+})
+    // if ()
+    // passwordHash.verify(pw, hashedPassword)
+    //
+    //     space = `SELECT * FROM users WHERE id =` + (id.toString());
+    //     db.all(space, function(err, rows) {
+    //     if (err) {console.log(err)}
+    //     res.send(rows);
+    //     })
 
-        space = `SELECT * FROM users WHERE id =` + (id.toString());
-        db.all(space, function(err, rows) {
-        if (err) {console.log(err)}
-        res.send(rows);
-        })
+
+    //not working
+    // DB log only returns object but not the pw value
+    // maybe stringify
 
     });
 
