@@ -2,7 +2,7 @@
 <link rel="import" href="../bower_components/paper-checkbox/paper-checkbox.html">
 <link rel="import" href="shared-styles.html">
 
-<dom-module id="list-detail-item-view">
+<dom-module id="items-view">
   <template>
     <style include="shared-styles">
       :host {
@@ -11,12 +11,18 @@
 
     </style>
 
+    <!-- route -->
+    <app-route
+        route="[[route]]"
+        pattern="/:listid"
+        data="{{routeData}}"></app-route>
+
     <!-- api -->
 
     <iron-ajax
       id="getItems"
       auto=""
-      url="/api/items"
+      url="/api/lists/[[routeData.listid]]/items"
       method="get"
       handle-as="json"
       last-response="{{items}}">
@@ -46,10 +52,17 @@
   </template>
 
   <script>
-    class ListDetailItemView extends Polymer.Element {
-      static get is() { return 'list-detail-item-view'; }
+    class ItemsView extends Polymer.Element {
+      static get is() { return 'items-view'; }
+
+      static get properties() { return {
+        listid: Object,
+        route: Object,
+        routeData: Object,
+      }}
+
     }
 
-    window.customElements.define(ListDetailItemView.is, ListDetailItemView);
+    window.customElements.define(ItemsView.is, ItemsView);
   </script>
 </dom-module>

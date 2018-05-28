@@ -27,7 +27,7 @@
 
 <div class="lists-list general-list general-list-link">
   <template is="dom-repeat" items="[[lists]]">
-  <a href="#">
+  <a href="/items-view/[[item.id]]" data-list-id$="[[item.id]]">
   <paper-icon-item>
     <iron-icon icon="mdi:[[item.icon]]" item-icon slot="item-icon"></iron-icon>
     <paper-item-body two-line>

@@ -18,7 +18,7 @@
 <link rel="import" href="components/mdi.html">
 
 <link rel="lazy-import" href="lists-view.html">
-<link rel="lazy-import" href="list-detail-item-view.html">
+<link rel="lazy-import" href="items-view.html">
 <link rel="lazy-import" href="my-view2.html">
 <link rel="lazy-import" href="my-view3.html">
 <link rel="lazy-import" href="my-view404.html">
@@ -96,8 +96,7 @@
     </style>
 
     <app-location
-        route="{{route}}"
-        url-space-regex="^[[rootPath]]">
+        route="{{route}}">
     </app-location>
 
     <app-route
@@ -158,8 +157,8 @@
             attr-for-selected="name"
             fallback-selection="my-view404"
             role="main">
-          <lists-view name="lists-view"></lists-view>
-          <list-detail-item-view name="list-detail-item-view"></list-detail-item-view>
+          <lists-view name="lists-view" route="{{subroute}}"></lists-view>
+          <items-view name="items-view" route="{{subroute}}"></items-view>
           <my-view2 name="my-view2"></my-view2>
           <my-view3 name="my-view3"></my-view3>
           <my-view404 name="my-view404"></my-view404>
