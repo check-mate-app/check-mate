@@ -48,7 +48,6 @@
     <div class="general-list">
       <template is="dom-repeat" items="[[items]]">
       <paper-icon-item>
-        <!-- <iron-icon icon="mdi:checkbox" item-icon slot="item-icon"></iron-icon> -->
         <template is="dom-if" if="{{!item.done}}">
           <paper-checkbox slot="item-icon" on-change="toggleTask" data-id="[[item.id]]"></paper-checkbox>
         </template>

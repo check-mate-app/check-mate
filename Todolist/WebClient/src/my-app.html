@@ -27,7 +27,7 @@
 
 <dom-module id="my-app">
   <template>
-    <style>
+    <style include="shared-styles">
       :host {
         --app-primary-color: #4285f4;
         --app-secondary-color: black;
@@ -94,6 +94,12 @@
       app-toolbar [main-title] {
         margin-left: 24px;
       }
+
+      a paper-icon-button,
+      a:active paper-icon-button,
+      a:visited paper-icon-button {
+        color: #000000;
+      }
     </style>
 
     <app-location
@@ -149,6 +155,13 @@
         <app-header slot="header" fixed effects="waterfall" reveals>
           <app-toolbar>
             <paper-icon-button icon="mdi:menu" drawer-toggle></paper-icon-button>
+
+            <template is="dom-if" if="{{_isEqualTo(page, 'items-view')}}">
+              <a href="" class="no-a-color" tab-index="-1">
+                <paper-icon-button icon="mdi:arrow-left"></paper-icon-button>
+              </a>
+            </template>
+
             <div main-title>My Lists</div>
           </app-toolbar>
         </app-header>
@@ -223,6 +236,10 @@
 
       _showPage404() {
         this.page = 'my-view404';
+      }
+
+      _isEqualTo(title, string) {
+        return title == string;
       }
     }
 
