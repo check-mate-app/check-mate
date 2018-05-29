@@ -162,7 +162,7 @@
               </a>
             </template>
 
-            <div main-title>My Lists</div>
+            <div main-title>[[pageTitle]]</div>
           </app-toolbar>
         </app-header>
 
@@ -171,8 +171,8 @@
             attr-for-selected="name"
             fallback-selection="my-view404"
             role="main">
-          <lists-view name="lists-view" route="{{subroute}}"></lists-view>
-          <items-view name="items-view" route="{{subroute}}"></items-view>
+          <lists-view name="lists-view" route="{{subroute}}" page-title="{{pageTitle}}"></lists-view>
+          <items-view name="items-view" route="{{subroute}}" page-title="{{pageTitle}}"></items-view>
           <my-view2 name="my-view2"></my-view2>
           <my-view3 name="my-view3"></my-view3>
           <my-view404 name="my-view404"></my-view404>
@@ -194,6 +194,11 @@
 
       static get properties() {
         return {
+          pageTitle: {
+                type: String,
+                notify:true,
+                value: "Test Title",
+            },
           page: {
             type: String,
             reflectToAttribute: true,
@@ -232,6 +237,8 @@
           null,
           this._showPage404.bind(this),
           true);
+
+        if(page == 'lists-view') this.set('pageTitle', "My Lists")
       }
 
       _showPage404() {
@@ -240,6 +247,12 @@
 
       _isEqualTo(title, string) {
         return title == string;
+      }
+
+      ready() {
+        super.ready()
+        //this.pageTitle = "My Lists"
+
       }
     }
 

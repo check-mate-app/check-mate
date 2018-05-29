@@ -59,6 +59,13 @@
     class ListsView extends Polymer.Element {
       static get is() { return 'lists-view'; }
 
+      static get properties() { return {
+        pageTitle: {
+                type: String,
+                notify:true,
+            }
+      }}
+
       openAddDialog(e) {
         let addText = prompt("How is this list called?")
         let icon = prompt("Which icon do you want to use?")
