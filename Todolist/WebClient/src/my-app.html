@@ -163,6 +163,15 @@
             </template>
 
             <div main-title>[[pageTitle]]</div>
+
+            <!-- Toolbar Buttons -->
+            <iron-pages
+                selected="[[page]]"
+                attr-for-selected="view"
+                role="main">
+              <items-toolbar view="items-view" route="{{subroute}}"></items-view>
+            </iron-pages>
+            <!-- /Toolbar Buttons -->
           </app-toolbar>
         </app-header>
 

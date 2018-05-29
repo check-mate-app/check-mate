@@ -50,7 +50,7 @@ module.exports = function (app, db) {
 
     id = req.params.id;
 
-    space = "UPDATE lists SET name=" + "'" + req.body.name + "'" + " WHERE id =" + (id.toString());
+    space = "UPDATE lists SET name=" + "'" + req.body.name + "'" + ", icon=" + "'" + req.body.icon + "'" + "  WHERE id =" + (id.toString());
     db.all(space, function(err, rows) {
       if (err) {
         console.log(err)

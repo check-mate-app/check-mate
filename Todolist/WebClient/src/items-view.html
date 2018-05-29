@@ -2,6 +2,42 @@
 <link rel="import" href="../bower_components/paper-checkbox/paper-checkbox.html">
 <link rel="import" href="shared-styles.html">
 
+<!-- Toolbar -->
+<dom-module id="items-toolbar">
+  <template>
+    <style include="shared-styles">
+      :host {
+
+      }
+    </style>
+
+    <paper-icon-button icon="mdi:rename-box" on-click="editList"></paper-icon-button>
+    <!-- <paper-icon-button icon="mdi:delete-forever" on-click="deleteList"></paper-icon-button> -->
+
+  </template>
+
+  <script>
+    class ItemsToolbar extends Polymer.Element {
+      static get is() { return 'items-toolbar'; }
+
+      editList(e) {
+        var event = new CustomEvent("items-toolbar-event_edit", {})
+				document.dispatchEvent(event)
+      }
+
+      deleteList(e) {
+        var event = new CustomEvent("items-toolbar-event_delete", {})
+				document.dispatchEvent(event)
+      }
+
+    }
+
+    window.customElements.define(ItemsToolbar.is, ItemsToolbar);
+  </script>
+</dom-module>
+
+
+<!-- Actual View -->
 <dom-module id="items-view">
   <template>
     <style include="shared-styles">
@@ -29,6 +65,15 @@
     </iron-ajax>
 
     <iron-ajax
+      id="updateList"
+      auto=""
+      url="/api/lists/[[routeData.listid]]"
+      method="put"
+      content-type="application/json"
+      handle-as="json">
+    </iron-ajax>
+
+    <iron-ajax
       id="getList"
       auto=""
       url="/api/lists/[[routeData.listid]]"
@@ -53,6 +98,13 @@
     <iron-ajax
       id="deleteItem"
       method="delete"
+      handle-as="json">
+    </iron-ajax>
+
+    <iron-ajax
+      id="deleteList"
+      method="delete"
+      url="/api/lists/[[routeData.listid]]"
       handle-as="json">
     </iron-ajax>
 
@@ -168,6 +220,38 @@
         this.set('pageTitle', item.detail.response[0].name)
       }
 
+      updateList() {
+        let newName = prompt("Enter new name for this list:")
+        let newIcon = prompt("Enter new icon for this list:")
+        let data = {
+          name: newName,
+          icon: newIcon
+        }
+
+        updateList.body = data
+        updateList.generateRequest()
+
+        this.set('pageTitle', newName)
+      }
+
+      deleteList() {
+        window.history.pushState({}, null, '/lists-view');
+        window.dispatchEvent(new CustomEvent('location-changed'));
+
+        //deleteList.generateRequest()
+        window.dispatchEvent(new CustomEvent('lists-changed'));
+      }
+
+      ready() {
+        super.ready()
+        document.addEventListener('items-toolbar-event_edit', function(e) {
+           this.updateList()
+  			}.bind(this));
+
+        document.addEventListener('items-toolbar-event_delete', function(e) {
+           this.deleteList()
+  			}.bind(this));
+      }
 
     }
 

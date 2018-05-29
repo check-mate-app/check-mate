@@ -82,6 +82,17 @@
         getLists.generateRequest()
 
       }
+
+      reloadLists(e) {
+        console.log("reload")
+        getLists.generateRequest()
+      }
+
+      ready() {
+        super.ready()
+        console.log("ready")
+        document.addEventListener('lists-changed', this.reloadLists);
+      }
     }
 
     window.customElements.define(ListsView.is, ListsView);
