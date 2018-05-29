@@ -56,8 +56,11 @@ app.put('/api/items/:id', function(req, res) {
 
   id = req.params.id;
 
+  console.log("should rename item to: " + req.body.content)
+  console.log(req.body)
+
   space = "UPDATE items SET content=" + "'" + req.body.content + "'" + " WHERE id =" + (id.toString());
-  db.all(space, function(err, rows) {
+  db.run(space, function(err) {
     if (err) {
       console.log(err)
     };

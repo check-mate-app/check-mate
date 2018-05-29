@@ -44,6 +44,19 @@
     </iron-ajax>
 
     <iron-ajax
+      id="renameItem"
+      method="put"
+      content-type="application/json"
+      handle-as="json">
+    </iron-ajax>
+
+    <iron-ajax
+      id="deleteItem"
+      method="delete"
+      handle-as="json">
+    </iron-ajax>
+
+    <iron-ajax
       id="addItem"
       url="/api/items"
       method="post"
@@ -67,6 +80,12 @@
         <paper-item-body>
           <div>[[item.content]]</div>
         </paper-item-body>
+
+        <paper-icon-button icon="mdi:pencil" class="list-action" on-click="renameItem">
+        </paper-icon-button>
+
+        <paper-icon-button icon="mdi:delete" class="list-action" on-click="deleteItem">
+        </paper-icon-button>
       </paper-icon-item>
     </template>
   </div>
@@ -116,6 +135,33 @@
 
         getItems.generateRequest()
 
+      }
+
+      deleteItem(e) {
+        let target = e.model
+
+        deleteItem.url = "/api/items/" + target.item.id
+        deleteItem.generateRequest()
+
+        getItems.generateRequest()
+      }
+
+      renameItem(e) {
+        let target = e.model
+
+        let renamedText = prompt("Enter new name for this item:")
+        console.log(renamedText)
+        let data = {
+          content: renamedText
+        }
+
+        renameItem.body = data
+
+        renameItem.url = "/api/items/" + target.item.id
+        console.log(renameItem)
+        renameItem.generateRequest()
+
+        getItems.generateRequest()
       }
 
       listLoaded(item) {
