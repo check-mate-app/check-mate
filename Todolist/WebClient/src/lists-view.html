@@ -66,20 +66,8 @@
       }}
 
       openAddDialog(e) {
-        let addText = prompt("How is this list called?")
-        let icon = prompt("Which icon do you want to use?")
-
-        let data = {
-          name: addText,
-          icon: icon,
-          owner: 1
-        }
-
-        addList.body = data
-        addList.generateRequest()
-
-        getLists.generateRequest()
-
+        window.history.pushState({}, null, '/list-preferences-view/new');
+        window.dispatchEvent(new CustomEvent('location-changed'));
       }
 
       reloadLists(e) {

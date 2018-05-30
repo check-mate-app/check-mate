@@ -114,6 +114,14 @@
       content-type="application/json"
       handle-as="json">
     </iron-ajax>
+
+    <iron-ajax
+      id="addList"
+      url="/api/lists"
+      method="post"
+      content-type="application/json"
+      handle-as="json">
+    </iron-ajax>
     <!-- /api -->
 
     <!-- content: -->
@@ -190,14 +198,26 @@
       }
 
       saveChanges(e) {
-        let data = {
-          name: this.$.lpNameSelector.value,
-          icon: this.$.lpIconSelector.selected,
-          color: this.$.lpColorSelector.selected
-        }
+        if (this.routeData.listid == "new") {
+          let data = {
+            name: this.$.lpNameSelector.value,
+            icon: this.$.lpIconSelector.selected,
+            color: this.$.lpColorSelector.selected,
+            owner: "vigonotion"
+          }
 
-        this.$.updateList.body = data
-        this.$.updateList.generateRequest()
+          this.$.addList.body = data
+          this.$.addList.generateRequest()
+        } else {
+          let data = {
+            name: this.$.lpNameSelector.value,
+            icon: this.$.lpIconSelector.selected,
+            color: this.$.lpColorSelector.selected
+          }
+
+          this.$.updateList.body = data
+          this.$.updateList.generateRequest()
+        }
 
         window.history.pushState({}, null, '/lists-view');
         window.dispatchEvent(new CustomEvent('location-changed'));

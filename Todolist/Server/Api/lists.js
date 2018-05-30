@@ -92,7 +92,7 @@ db.all(space,function(err,rows){
   //ADD
   app.post('/api/lists', function(req, res) {
     let space = `INSERT INTO lists(name, icon, owner, color ) VALUES (?, ?, ?, ?)`;
-    db.run(space, [req.body.name, req.body.icon, req.body.owner, 0], function(err) {
+    db.run(space, [req.body.name, req.body.icon, req.body.owner, req.body.color], function(err) {
       if (err) {
         console.log(err);
       }
