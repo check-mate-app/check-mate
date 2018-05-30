@@ -50,7 +50,11 @@ module.exports = function (app, db) {
     space = "SELECT * FROM lists WHERE id =" + (id.toString());
     db.each(space, function(err, row) {
       if (err) {console.log(err)}
+
+      // row.push("itemNumb" : itemNumber.length);
+      // row.push("itemsDon" : itemsDone.length);
       res.send([row,"items: " + itemNumber.length, "done: "+itemsDone.length]);
+      // res.send(row);
     })
   });
 

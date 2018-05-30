@@ -23,6 +23,10 @@ module.exports = function(app,db){
     })
   });
 
+  app.get('api/logout',function(req,res){
+    //change all sessionvars to null
+  });
+
 
   //Show all users
   app.get('/api/users',function(req, res){
