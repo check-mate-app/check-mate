@@ -1,5 +1,6 @@
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
 <link rel="import" href="shared-styles.html">
+<link rel="import" href="components/gradient-list-item.html">
 
 <dom-module id="lists-view">
   <template>
@@ -36,15 +37,13 @@
 <div class="lists-list general-list general-list-link">
   <template is="dom-repeat" items="[[lists]]">
   <a href="/items-view/[[item.id]]" data-list-id$="[[item.id]]">
-  <paper-icon-item>
-    <iron-icon icon="mdi:[[item.icon]]" item-icon slot="item-icon"></iron-icon>
-    <paper-item-body two-line>
-      <div>[[item.name]]</div>
-      <div secondary>Owner: [[item.owner]]</div>
-    </paper-item-body>
-    <paper-icon-button icon="mdi:chevron-right">
-    </paper-icon-button>
-  </paper-icon-item>
+
+  <gradient-list-item
+    name="[[item.name]]"
+    color="[[item.color]]">
+    <iron-icon icon="mdi:[[item.icon]]" item-icon slot="icon"></iron-icon>
+  </gradient-list-item>
+
   </a>
 </template>
 </div>
