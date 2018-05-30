@@ -14,26 +14,20 @@ module.exports = function(app,db){
     let id = req.body.id;
     console.log("id: "+id);
 
-space = 'SELECT password FROM users WHERE id ='+(id.toString());
-db.all(space,function(err,rows){
-  if (err){console.log(err)}
-  console.log("DB: "+ rows);
-})
-    // if ()
-    // passwordHash.verify(pw, hashedPassword)
-    //
-    //     space = `SELECT * FROM users WHERE id =` + (id.toString());
-    //     db.all(space, function(err, rows) {
-    //     if (err) {console.log(err)}
-    //     res.send(rows);
-    //     })
-
-
-    //not working
-    // DB log only returns object but not the pw value
-    // maybe stringify
-
-    });
+    space = 'SELECT password FROM users WHERE id ='+(id.toString());
+    db.each(space,function(err,row){
+      if (err){console.log(err)}
+      console.log("DB: "+ row.password);
+      console.log(passwordHash.verify(pw, row.password));
+      if(passwordHash.verify(pw, row.password)){
+        console.log("ACCEPTED");
+    //Vincent | session vars here
+      }
+      else{
+        console.log("WRONG");
+      }
+    })
+  });
 
 
   //Show all users
