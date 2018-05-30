@@ -135,7 +135,7 @@
 
     <!-- content: -->
     <div class="general-list general-list-bg">
-      <template is="dom-repeat" items="[[items]]">
+      <template is="dom-repeat" items="[[items]]" sort="_sortDone">
       <paper-icon-item>
         <template is="dom-if" if="{{!item.done}}">
           <paper-checkbox slot="item-icon" on-change="toggleTask" data-id="[[item.id]]"></paper-checkbox>
@@ -177,14 +177,22 @@
             }
       }}
 
+      _sortDone(a, b) {
+
+        if(a.done && !b.done) return 1;
+        else if(!a.done && b.done) return -1;
+
+        return 0;
+      }
+
       toggleTask(e){
         let target = e.model
         let checked = e.target.checked
 
-        if(checked) setItemState.url = "/api/items/" + target.item.id + "/done"
-        else setItemState.url = "/api/items/" + target.item.id + "/undone"
+        if(checked) this.$.setItemState.url = "/api/items/" + target.item.id + "/done"
+        else this.$.setItemState.url = "/api/items/" + target.item.id + "/undone"
 
-        let request = setItemState.generateRequest()
+        let request = this.$.setItemState.generateRequest()
       }
 
       openAddDialog(e) {
@@ -197,20 +205,20 @@
           done: 0
         }
 
-        addItem.body = data
-        addItem.generateRequest()
+        this.$.addItem.body = data
+        this.$.addItem.generateRequest()
 
-        getItems.generateRequest()
+        this.$.getItems.generateRequest()
 
       }
 
       deleteItem(e) {
         let target = e.model
 
-        deleteItem.url = "/api/items/" + target.item.id
-        deleteItem.generateRequest()
+        this.$.deleteItem.url = "/api/items/" + target.item.id
+        this.$.deleteItem.generateRequest()
 
-        getItems.generateRequest()
+        this.$.getItems.generateRequest()
       }
 
       renameItem(e) {
@@ -222,13 +230,12 @@
           content: renamedText
         }
 
-        renameItem.body = data
+        this.$.renameItem.body = data
 
-        renameItem.url = "/api/items/" + target.item.id
-        console.log(renameItem)
-        renameItem.generateRequest()
+        this.$.renameItem.url = "/api/items/" + target.item.id
+        this.$.renameItem.generateRequest()
 
-        getItems.generateRequest()
+        this.$.getItems.generateRequest()
       }
 
       listLoaded(item) {
