@@ -5,10 +5,6 @@ module.exports = function(app,db){
  //login
 
  app.get('/api/login', function(req, res){
-    // passwort aus body lesen
-    // passwort hshen
-    // name aus liste suchen
-    // pw da wo name vergleichen
     let pw = req.body.password;
     console.log("pw: "+pw);
     let id = req.body.id;
