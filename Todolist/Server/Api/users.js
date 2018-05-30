@@ -6,22 +6,17 @@ module.exports = function(app,db){
 
  app.get('/api/login', function(req, res){
     let pw = req.body.password;
-    console.log("pw: "+pw);
     let id = req.body.id;
-    console.log("id: "+id);
 
     space = 'SELECT password FROM users WHERE id ='+(id.toString());
     db.each(space,function(err,row){
       if (err){console.log(err)}
-      console.log("DB: "+ row.password);
       console.log(passwordHash.verify(pw, row.password));
       if(passwordHash.verify(pw, row.password)){
-        console.log("ACCEPTED");
     //Vincent | session vars here
         res.send("response");
       }
       else{
-        console.log("WRONG");
         res.status(401);
         res.send();
       }
