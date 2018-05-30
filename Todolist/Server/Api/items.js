@@ -47,7 +47,6 @@ module.exports = function(app,db){
           console.log(err)
         }
       })
-      console.log("deleted item with id of: " + id);
       res.send({})
     });
 
@@ -104,6 +103,4 @@ app.get('/api/items/:id', function(req, res) {
     //missing: items on the list are not included in res.send yet
   })
 });
-
-
 }

@@ -1,5 +1,29 @@
 module.exports = function(app,db){
 
+ const passwordHash = require('password-hash');
+
+ //login
+
+ app.get('/api/login', function(req, res){
+    let pw = req.body.password;
+    let id = req.body.id;
+
+    space = 'SELECT password FROM users WHERE id ='+(id.toString());
+    db.each(space,function(err,row){
+      if (err){console.log(err)}
+      console.log(passwordHash.verify(pw, row.password));
+      if(passwordHash.verify(pw, row.password)){
+    //Vincent | session vars here
+        res.send("response");
+      }
+      else{
+        res.status(401);
+        res.send();
+      }
+    })
+  });
+
+
   //Show all users
   app.get('/api/users',function(req, res){
     db.all(`SELECT * FROM users`, function(err, rows){
@@ -23,10 +47,11 @@ module.exports = function(app,db){
     });
   });
 
-//Add new user
+//Add new user   sign up
   app.post('/api/users', function(req, res){
+    let pw = passwordHash.generate(req.body.password);
     let space = `INSERT INTO users (name, password, email) VALUES (?, ?, ?)`;
-    db.run(space,[req.body.name,req.body.password,req.body.email], function(err){
+    db.run(space,[req.body.name,pw,req.body.email], function(err){
       if (err) {
         console.log(err)
       }
@@ -71,4 +96,5 @@ module.exports = function(app,db){
     });
 
   });
+
 };
