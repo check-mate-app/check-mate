@@ -14,7 +14,7 @@
     </style>
 
     <paper-icon-button icon="mdi:rename-box" on-click="editList"></paper-icon-button>
-    <!-- <paper-icon-button icon="mdi:delete-forever" on-click="deleteList"></paper-icon-button> -->
+    <paper-icon-button icon="mdi:delete-forever" on-click="deleteList"></paper-icon-button>
 
   </template>
 
@@ -251,7 +251,7 @@
         window.history.pushState({}, null, '/lists-view');
         window.dispatchEvent(new CustomEvent('location-changed'));
 
-        //deleteList.generateRequest()
+        this.$.deleteList.generateRequest()
         window.dispatchEvent(new CustomEvent('lists-changed'));
       }
 
@@ -262,7 +262,7 @@
   			}.bind(this));
 
         document.addEventListener('items-toolbar-event_delete', function(e) {
-           this.deleteList()
+           if(confirm("Do you really want to delete this list?")) this.deleteList()
   			}.bind(this));
       }
 

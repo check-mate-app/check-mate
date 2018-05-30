@@ -219,8 +219,11 @@
           this.$.updateList.generateRequest()
         }
 
+        window.dispatchEvent(new CustomEvent('lists-changed'));
+
         window.history.pushState({}, null, '/lists-view');
         window.dispatchEvent(new CustomEvent('location-changed'));
+
       }
 
     }

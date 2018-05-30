@@ -72,13 +72,21 @@
 
       reloadLists(e) {
         console.log("reload")
-        getLists.generateRequest()
+        this.$.getLists.generateRequest()
       }
 
       ready() {
         super.ready()
-        console.log("ready")
-        document.addEventListener('lists-changed', this.reloadLists);
+      }
+
+      connectedCallback() {
+        super.connectedCallback();
+        window.addEventListener('lists-changed', this.reloadLists.bind(this));
+      }
+
+      disconnectedCallback() {
+        super.disconnectedCallback();
+        window.removeEventListener('lists-changed', this.reloadLists.bind(this));
       }
     }
 
