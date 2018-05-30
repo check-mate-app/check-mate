@@ -154,7 +154,9 @@
 
         <app-header slot="header" fixed effects="waterfall" reveals>
           <app-toolbar>
-            <paper-icon-button icon="mdi:menu" drawer-toggle></paper-icon-button>
+            <template is="dom-if" if="{{!_shallShowBack(page)}}">
+              <paper-icon-button icon="mdi:menu" drawer-toggle></paper-icon-button>
+            </template>
 
             <template is="dom-if" if="{{_shallShowBack(page)}}">
                 <paper-icon-button icon="mdi:arrow-left" onclick="javascript:window.history.back()"></paper-icon-button>
@@ -247,7 +249,8 @@
           true);
 
         if(page == 'lists-view') this.set('pageTitle', "My Lists")
-        else if(page == 'list-preferences-view') this.set('pageTitle', "Edit List Details")
+        else if(page == 'list-preferences-view') this.set('pageTitle', "List Details")
+        else if(page == 'items-view') this.set('pageTitle', "List Items")
       }
 
       _showPage404() {
