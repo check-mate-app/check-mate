@@ -23,7 +23,7 @@
 <link rel="lazy-import" href="my-view2.html">
 <link rel="lazy-import" href="my-view3.html">
 <link rel="lazy-import" href="my-view404.html">
-<link rel="lazy-import" href="my-new-view.html">
+<link rel="lazy-import" href="list-preferences-view.html">
 
 <dom-module id="my-app">
   <template>
@@ -156,10 +156,8 @@
           <app-toolbar>
             <paper-icon-button icon="mdi:menu" drawer-toggle></paper-icon-button>
 
-            <template is="dom-if" if="{{_isEqualTo(page, 'items-view')}}">
-              <a href="" class="no-a-color" tab-index="-1">
-                <paper-icon-button icon="mdi:arrow-left"></paper-icon-button>
-              </a>
+            <template is="dom-if" if="{{_shallShowBack(page)}}">
+                <paper-icon-button icon="mdi:arrow-left" onclick="javascript:window.history.back()"></paper-icon-button>
             </template>
 
             <div main-title>[[pageTitle]]</div>
@@ -182,6 +180,7 @@
             role="main">
           <lists-view name="lists-view" route="{{subroute}}" page-title="{{pageTitle}}"></lists-view>
           <items-view name="items-view" route="{{subroute}}" page-title="{{pageTitle}}"></items-view>
+          <list-preferences-view name="list-preferences-view" route="{{subroute}}" page-title="{{pageTitle}}"></list-preferences-view>
           <my-view2 name="my-view2"></my-view2>
           <my-view3 name="my-view3"></my-view3>
           <my-view404 name="my-view404"></my-view404>
@@ -248,14 +247,15 @@
           true);
 
         if(page == 'lists-view') this.set('pageTitle', "My Lists")
+        else if(page == 'list-preferences-view') this.set('pageTitle', "Edit List Details")
       }
 
       _showPage404() {
         this.page = 'my-view404';
       }
 
-      _isEqualTo(title, string) {
-        return title == string;
+      _shallShowBack(title) {
+        return title == "items-view" || title == "list-preferences-view";
       }
 
       ready() {

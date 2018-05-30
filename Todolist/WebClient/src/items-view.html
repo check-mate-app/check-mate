@@ -1,5 +1,7 @@
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../bower_components/paper-checkbox/paper-checkbox.html">
+<link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
 <link rel="import" href="shared-styles.html">
 
 <!-- Toolbar -->
@@ -118,6 +120,19 @@
 
     <!-- /api -->
 
+    <!-- dialogs -->
+    <paper-dialog id="updateListDialog">
+      <h2>Header</h2>
+      <paper-dialog-scrollable>
+        Lorem ipsum...
+      </paper-dialog-scrollable>
+      <div class="buttons">
+        <paper-button dialog-dismiss>Cancel</paper-button>
+        <paper-button dialog-confirm autofocus>Accept</paper-button>
+      </div>
+    </paper-dialog>
+    <!-- /dialogs -->
+
     <!-- content: -->
     <div class="general-list general-list-bg">
       <template is="dom-repeat" items="[[items]]">
@@ -221,17 +236,8 @@
       }
 
       updateList() {
-        let newName = prompt("Enter new name for this list:")
-        let newIcon = prompt("Enter new icon for this list:")
-        let data = {
-          name: newName,
-          icon: newIcon
-        }
-
-        updateList.body = data
-        updateList.generateRequest()
-
-        this.set('pageTitle', newName)
+        window.history.pushState({}, null, '/list-preferences-view/' + this.routeData.listid);
+        window.dispatchEvent(new CustomEvent('location-changed'));
       }
 
       deleteList() {
