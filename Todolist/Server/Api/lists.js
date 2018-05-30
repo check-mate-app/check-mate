@@ -82,8 +82,8 @@ db.all(space,function(err,rows){
   //ADD
   app.post('/api/lists', function(req, res) {
     console.log(req.body);
-    let space = `INSERT INTO lists(name, icon, owner) VALUES (?, ?, ?)`;
-    db.run(space, [req.body.name, req.body.icon, req.body.owner], function(err) {
+    let space = `INSERT INTO lists(name, icon, owner, color, done ) VALUES (?, ?, ?, ?, ?)`;
+    db.run(space, [req.body.name, req.body.icon, req.body.owner, 0, 0], function(err) {
       if (err) {
         console.log(err);
       }

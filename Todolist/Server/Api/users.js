@@ -18,9 +18,12 @@ module.exports = function(app,db){
       if(passwordHash.verify(pw, row.password)){
         console.log("ACCEPTED");
     //Vincent | session vars here
+        res.send("response");
       }
       else{
         console.log("WRONG");
+        res.status(401);
+        res.send();
       }
     })
   });
