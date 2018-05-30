@@ -15,18 +15,56 @@
     }
 
     .gli-gradient-0 {
+      background: #134E5E;  /* fallback for old browsers */
+      background: -webkit-linear-gradient(to right, #71B280, #134E5E);  /* Chrome 10-25, Safari 5.1-6 */
+      background: linear-gradient(to right, #71B280, #134E5E); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+
+    }
+
+    .gli-gradient-1 {
+      background: #232526;  /* fallback for old browsers */
+      background: -webkit-linear-gradient(to right, #414345, #232526);  /* Chrome 10-25, Safari 5.1-6 */
+      background: linear-gradient(to right, #414345, #232526); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    }
+
+    .gli-gradient-2 {
+      background: #5C258D;  /* fallback for old browsers */
+      background: -webkit-linear-gradient(to right, #4389A2, #5C258D);  /* Chrome 10-25, Safari 5.1-6 */
+      background: linear-gradient(to right, #4389A2, #5C258D); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    }
+
+    .gli-gradient-3 {
+      background: #5f2c82;  /* fallback for old browsers */
+      background: -webkit-linear-gradient(to right, #49a09d, #5f2c82);  /* Chrome 10-25, Safari 5.1-6 */
+      background: linear-gradient(to right, #49a09d, #5f2c82); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+
+    }
+
+    .gli-gradient-4 {
+      background: #EC6F66;  /* fallback for old browsers */
+      background: -webkit-linear-gradient(to right, #F3A183, #EC6F66);  /* Chrome 10-25, Safari 5.1-6 */
+      background: linear-gradient(to right, #F3A183, #EC6F66); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    }
+
+    .gli-gradient-5 {
+      background: #7474BF;  /* fallback for old browsers */
+      background: -webkit-linear-gradient(to right, #348AC7, #7474BF);  /* Chrome 10-25, Safari 5.1-6 */
+      background: linear-gradient(to right, #348AC7, #7474BF); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+    }
+
+    .gli-gradient-6 {
       background: #B993D6;  /* fallback for old browsers */
       background: -webkit-linear-gradient(to right, #8CA6DB, #B993D6);  /* Chrome 10-25, Safari 5.1-6 */
       background: linear-gradient(to right, #8CA6DB, #B993D6); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
     }
 
-    .gli-gradient-1 {
+    .gli-gradient-7 {
       background: #f2709c;  /* fallback for old browsers */
       background: -webkit-linear-gradient(to right, #ff9472, #f2709c);  /* Chrome 10-25, Safari 5.1-6 */
       background: linear-gradient(to right, #ff9472, #f2709c); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
     }
 
-    .gli-gradient-2 {
+    .gli-gradient-8 {
       background: #C04848;  /* fallback for old browsers */
       background: -webkit-linear-gradient(to right, #480048, #C04848);  /* Chrome 10-25, Safari 5.1-6 */
       background: linear-gradient(to right, #480048, #C04848); /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
@@ -85,31 +123,31 @@
 
 
     </style>
-<div>
-    <div class$="gli-card gli-gradient gli-gradient-[[color]]">
-      <div class="gli-card-content-wrapper">
-        <div class="gli-card-icon">
-          <slot name="icon"></slot>
-        </div>
-        <div class="gli-card-content">
-          <h1>[[name]]</h1>
-          <div class="gli-progress-bar">
-            <div></div>
+    <div>
+      <div class$="gli-card gli-gradient gli-gradient-[[color]]">
+        <div class="gli-card-content-wrapper">
+          <div class="gli-card-icon">
+            <slot name="icon"></slot>
           </div>
-        </div>
-        <div class="gli-card-action">
-          <iron-icon icon="mdi:chevron-right" item-icon slot="item-icon"></iron-icon>
+          <div class="gli-card-content">
+            <h1>[[name]]</h1>
+            <div class="gli-progress-bar">
+              <div></div>
+            </div>
+          </div>
+          <div class="gli-card-action">
+            <iron-icon icon="mdi:chevron-right" item-icon slot="item-icon"></iron-icon>
+          </div>
         </div>
       </div>
     </div>
-  </div>
   </template>
 
   <script>
-    class GradientListItem extends Polymer.Element {
-      static get is() { return 'gradient-list-item'; }
-    }
+  class GradientListItem extends Polymer.Element {
+    static get is() { return 'gradient-list-item'; }
+  }
 
-    window.customElements.define(GradientListItem.is, GradientListItem);
+  window.customElements.define(GradientListItem.is, GradientListItem);
   </script>
 </dom-module>
