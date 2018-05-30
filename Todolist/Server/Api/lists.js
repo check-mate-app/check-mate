@@ -31,17 +31,29 @@ module.exports = function (app, db) {
   //GET LIST BY ID
   app.get('/api/lists/:id', function(req, res) {
     id = req.params.id;
-    console.log("ID " + id);
+      let itemNumber = [];
+      let itemsDone = [];
+
+      space ='SELECT * FROM items WHERE listid = "'+req.params.id+'"';
+      db.each(space,function(err,row){
+        if(err){console.log(err)}
+        itemNumber.push(row.id)
+      })
+
+      space ='SELECT * FROM items WHERE listid = "'+req.params.id+'" AND done = 1';
+      db.each(space,function(err,row){
+        if(err){console.log(err)}
+        itemsDone.push(row.id)
+      })
+
 
     space = "SELECT * FROM lists WHERE id =" + (id.toString());
-    db.all(space, function(err, rows) {
-      if (err) {
-        console.log(err)
-      };
-      console.log("log");
-      res.send(rows);
-      //missing: items on the list are not included in res.send yet
+    db.each(space, function(err, row) {
+      if (err) {console.log(err)}
+      res.send([row,"items: " + itemNumber.length, "done: "+itemsDone.length]);
     })
+
+
   });
 
   //UPDATE
@@ -82,8 +94,8 @@ db.all(space,function(err,rows){
   //ADD
   app.post('/api/lists', function(req, res) {
     console.log(req.body);
-    let space = `INSERT INTO lists(name, icon, owner, color, done ) VALUES (?, ?, ?, ?, ?)`;
-    db.run(space, [req.body.name, req.body.icon, req.body.owner, 0, 0], function(err) {
+    let space = `INSERT INTO lists(name, icon, owner, color ) VALUES (?, ?, ?, ?)`;
+    db.run(space, [req.body.name, req.body.icon, req.body.owner, 0], function(err) {
       if (err) {
         console.log(err);
       }
@@ -97,4 +109,7 @@ db.all(space,function(err,rows){
       res.send(rows);
     })
   });
+
+
+  //needed: function that counts a lists items and how many are done
 }
