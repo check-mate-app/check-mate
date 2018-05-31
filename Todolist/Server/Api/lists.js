@@ -2,7 +2,7 @@ module.exports = function (app, db) {
 
   //SHOW LISTS
   app.get('/api/lists', function(req, res) {
-    db.all(`SELECT * FROM lists`, function(err, rows) {
+    db.all(`select l.*, (select count(i.id) from items i where i.listid = l.id ) as items,(select count(i.id) from items i where i.listid = l.id  and i.done = 1) as done from lists l group by l.id;`, function(err, rows) {
       if (err) {
         console.error(err.message);
       } else {
@@ -30,27 +30,10 @@ module.exports = function (app, db) {
   //GET LIST BY ID
   app.get('/api/lists/:id', function(req, res) {
     id = req.params.id;
-      let itemNumber = [];
-      let itemsDone = [];
-
-      space ='SELECT * FROM items WHERE listid = "'+req.params.id+'"';
-      db.each(space,function(err,row){
-        if(err){console.log(err)}
-        itemNumber.push(row.id)
-      })
-
-      space ='SELECT * FROM items WHERE listid = "'+req.params.id+'" AND done = 1';
-      db.each(space,function(err,row){
-        if(err){console.log(err)}
-        itemsDone.push(row.id)
-      })
-
-      setTimeout(function(){}, 10);
-
-    space = "SELECT * FROM lists WHERE id =" + (id.toString());
+    space = "select l.*, (select count(i.id) from items i where i.listid = l.id ) as items,(select count(i.id) from items i where i.listid = l.id  and i.done = 1) as done from lists l WHERE l.id = " + id.toString() + " group by l.id;";
     db.each(space, function(err, row) {
       if (err) {console.log(err)}
-      res.send([row,"items: " + itemNumber.length, "done: "+itemsDone.length]);
+      res.send(row);
     })
   });
 
