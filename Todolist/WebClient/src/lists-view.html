@@ -40,7 +40,8 @@
 
   <gradient-list-item
     name="[[item.name]]"
-    color="[[item.color]]">
+    color="[[item.color]]"
+    progress="{{_progress(item.items, item.done)}}">
     <iron-icon icon="[[item.icon]]" item-icon slot="icon"></iron-icon>
   </gradient-list-item>
 
@@ -87,6 +88,11 @@
       disconnectedCallback() {
         super.disconnectedCallback();
         window.removeEventListener('lists-changed', this.reloadLists.bind(this));
+      }
+
+      _progress(items, done) {
+        if(items == 0 || done == 0) return 0
+        return (done/items)*100
       }
     }
 

@@ -193,6 +193,7 @@
         else this.$.setItemState.url = "/api/items/" + target.item.id + "/undone"
 
         let request = this.$.setItemState.generateRequest()
+        window.dispatchEvent(new CustomEvent('lists-changed'));
       }
 
       openAddDialog(e) {
