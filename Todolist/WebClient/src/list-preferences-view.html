@@ -131,11 +131,11 @@
           <div class="preferences-list">
 
             <div class="lp-section">
-              <paper-input label="List Title" value="[[list.0.name]]" id="lpNameSelector"></paper-input>
+              <paper-input label="List Title" value="[[list.name]]" id="lpNameSelector"></paper-input>
             </div>
 
             <div class="lp-section">
-              <iron-selector attr-for-selected="icon" selected="[[list.0.icon]]" id="lpIconSelector">
+              <iron-selector attr-for-selected="icon" selected="[[list.icon]]" id="lpIconSelector">
                 <paper-icon-button icon="mdi:cart" on-click="selectIcon"></paper-icon-button>
                 <paper-icon-button icon="mdi:food" on-click="selectIcon"></paper-icon-button>
                 <paper-icon-button icon="mdi:checkbox-multiple-marked-circle-outline" on-click="selectIcon"></paper-icon-button>
@@ -157,7 +157,7 @@
 
 
             <div class="lp-section">
-              <iron-selector attr-for-selected="data-color" selected="[[list.0.color]]" id="lpColorSelector">
+              <iron-selector attr-for-selected="data-color" selected="[[list.color]]" id="lpColorSelector">
                 <div class="lp-color-option color-0" data-color="0"></div>
                 <div class="lp-color-option color-1" data-color="1"></div>
                 <div class="lp-color-option color-2" data-color="2"></div>
