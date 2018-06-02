@@ -3,46 +3,55 @@ module.exports = function(app,db){
  const passwordHash = require('password-hash');
 
  //login
+ app.post('/api/login', function(req, res, next){
+   console.log(req.session.id);
+   if (req.session.id) {
+    console.log("User already logged in.");
+    res.send();
+    } else {
 
- app.get('/api/login', function(req, res){
-    let pw = req.body.password;
-    let id = req.body.id;
 
-    space = 'SELECT password FROM users WHERE id ='+(id.toString());
-    db.each(space,function(err,row){
-      if (err){console.log(err)}
-      console.log(passwordHash.verify(pw, row.password));
-      if(passwordHash.verify(pw, row.password)){
-    //Vincent | session vars here
-        res.send("response");
-      }
-      else{
-        res.status(401);
-        res.send();
-      }
-    })
+     let pw = req.body.password;
+     let name = req.body.name;
+
+     space = 'SELECT password,id FROM users WHERE name ="'+name+'"';
+     db.each(space,function(err,row){
+       if (err){console.log(err)}
+       console.log(passwordHash.verify(pw, row.password));
+       if(passwordHash.verify(pw, row.password)){
+            req.session.id = row.id;
+            res.send({id: req.session.id});
+       }
+       else{
+         res.status(401);
+         res.send({});
+       }
+     })
+
+
+     }
   });
 
+  //logout
+  app.get('api/logout',function(req,res){
+    //change all sessionvars to null
+    delete req.session.id;
+  });
 
   //Show all users
   app.get('/api/users',function(req, res){
     db.all(`SELECT * FROM users`, function(err, rows){
-      if (err) {
-        console.log(err)
-      }
+      if (err) {console.log(err)}
         res.send(rows);
     });
   });
-
 
   //Show specific user by specifying ID
   app.get('/api/users/:id', function(req, res){
     let id = req.params.id;
     space = `SELECT * FROM users WHERE id =` + (id.toString());
     db.all(space, function(err, rows) {
-      if (err) {
-        console.log(err)
-      }
+      if (err) {console.log(err)}
         res.send(rows);
     });
   });
@@ -52,13 +61,10 @@ module.exports = function(app,db){
     let pw = passwordHash.generate(req.body.password);
     let space = `INSERT INTO users (name, password, email) VALUES (?, ?, ?)`;
     db.run(space,[req.body.name,pw,req.body.email], function(err){
-      if (err) {
-        console.log(err)
-      }
+      if (err) {console.log(err)}
         res.send([]);
     });
   });
-
 
 //Delete user by ID
   app.delete('/api/users/:id',function(req,res){
@@ -71,7 +77,6 @@ module.exports = function(app,db){
     });
     res.send({});
   });
-
 
   //Update user by ID
   app.put('/api/users/:id', function(req, res) {
@@ -94,7 +99,5 @@ module.exports = function(app,db){
       }
       res.send(rows);
     });
-
   });
-
 };

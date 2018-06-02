@@ -12,6 +12,15 @@ const sqlite3 = require('sqlite3').verbose();
 
 const app = express();
 
+const session = require('client-sessions');
+app.use(session({
+  secret: 'quatrocoptolopis',
+  cookieName: 'session',
+  duration: 86400,
+  activeDuration: 1000*60*5
+}));
+
+
 
 
 
