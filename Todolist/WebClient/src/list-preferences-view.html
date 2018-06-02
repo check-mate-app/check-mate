@@ -170,6 +170,16 @@
               </iron-selector>
             </div>
 
+            <div class="lp-section">
+              <paper-icon-item>
+                <paper-checkbox slot="item-icon" id="lpFavoriteCheckbox" checked="{{list.favorite}}"></paper-checkbox>
+
+                <paper-item-body>
+                  <div>Mark as favorite</div>
+                </paper-item-body>
+              </paper-icon-item>
+            </div>
+
           </div>
 
     </div>
@@ -213,7 +223,8 @@
             name: this.$.lpNameSelector.value,
             icon: this.$.lpIconSelector.selected,
             color: this.$.lpColorSelector.selected,
-            owner: "vigonotion"
+            owner: "vigonotion",
+            favorite: this.$.lpFavoriteCheckbox.checked ? 1 : 0
           }
 
           this.$.addList.body = data
@@ -222,7 +233,8 @@
           let data = {
             name: this.$.lpNameSelector.value,
             icon: this.$.lpIconSelector.selected,
-            color: this.$.lpColorSelector.selected
+            color: this.$.lpColorSelector.selected,
+            favorite: this.$.lpFavoriteCheckbox.checked ? 1 : 0
           }
 
           this.$.updateList.body = data
