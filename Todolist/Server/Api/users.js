@@ -3,52 +3,54 @@ module.exports = function(app,db){
  const passwordHash = require('password-hash');
 
  //login
+ app.post('/api/login', function(req, res, next){
+   req.session.id = "test";
+   req.session.save();
+   console.log(req.session.id);
 
- app.get('/api/login', function(req, res){
     let pw = req.body.password;
-    let id = req.body.id;
+    let name = req.body.name;
 
-    space = 'SELECT password FROM users WHERE id ='+(id.toString());
+    space = 'SELECT password,id FROM users WHERE name ="'+name+'"';
     db.each(space,function(err,row){
       if (err){console.log(err)}
+      let id = row.id;
       console.log(passwordHash.verify(pw, row.password));
       if(passwordHash.verify(pw, row.password)){
-    //Vincent | session vars here
-        res.send("response");
+
+          // var sessData = req.session;
+
+
+          res.send({name: name});
+
       }
       else{
         res.status(401);
-        res.send();
+        res.send({});
       }
     })
   });
 
   //logout
-
   app.get('api/logout',function(req,res){
     //change all sessionvars to null
+    delete req.session.id;
   });
-
 
   //Show all users
   app.get('/api/users',function(req, res){
     db.all(`SELECT * FROM users`, function(err, rows){
-      if (err) {
-        console.log(err)
-      }
+      if (err) {console.log(err)}
         res.send(rows);
     });
   });
-
 
   //Show specific user by specifying ID
   app.get('/api/users/:id', function(req, res){
     let id = req.params.id;
     space = `SELECT * FROM users WHERE id =` + (id.toString());
     db.all(space, function(err, rows) {
-      if (err) {
-        console.log(err)
-      }
+      if (err) {console.log(err)}
         res.send(rows);
     });
   });
@@ -58,13 +60,10 @@ module.exports = function(app,db){
     let pw = passwordHash.generate(req.body.password);
     let space = `INSERT INTO users (name, password, email) VALUES (?, ?, ?)`;
     db.run(space,[req.body.name,pw,req.body.email], function(err){
-      if (err) {
-        console.log(err)
-      }
+      if (err) {console.log(err)}
         res.send([]);
     });
   });
-
 
 //Delete user by ID
   app.delete('/api/users/:id',function(req,res){
@@ -77,7 +76,6 @@ module.exports = function(app,db){
     });
     res.send({});
   });
-
 
   //Update user by ID
   app.put('/api/users/:id', function(req, res) {
@@ -100,7 +98,5 @@ module.exports = function(app,db){
       }
       res.send(rows);
     });
-
   });
-
 };
