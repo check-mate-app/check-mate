@@ -33,9 +33,11 @@ module.exports = function(app,db){
   });
 
   //logout
-  app.get('api/logout',function(req,res){
-    //change all sessionvars to null
-    delete req.session.id;
+  app.post('/api/logout',function(req,res){
+    console.log(req.session.id);
+    //del this boi req.session.id ;
+    console.log(req.session.id);
+    res.send([]);
   });
 
   //Show all users
