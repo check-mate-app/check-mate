@@ -259,7 +259,7 @@
       _routePageChanged(page) {
         // If no page was found in the route data, page will be an empty string.
         // Default to 'lists-view' in that case.
-        this.page = page || 'lists-view';
+        this.page = page || 'lists-favorites-view';
 
         // Close a non-persistent drawer when the page & route are changed.
         if (!this.$.drawer.persistent) {
