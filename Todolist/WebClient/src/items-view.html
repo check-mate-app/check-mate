@@ -2,6 +2,8 @@
 <link rel="import" href="../bower_components/paper-checkbox/paper-checkbox.html">
 <link rel="import" href="../bower_components/paper-dialog/paper-dialog.html">
 <link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
+
 <link rel="import" href="shared-styles.html">
 
 <!-- Toolbar -->
@@ -119,21 +121,22 @@
 
     <!-- /api -->
 
-    <!-- dialogs -->
-    <paper-dialog id="updateListDialog">
-      <h2>Header</h2>
-      <paper-dialog-scrollable>
-        Lorem ipsum...
-      </paper-dialog-scrollable>
-      <div class="buttons">
-        <paper-button dialog-dismiss>Cancel</paper-button>
-        <paper-button dialog-confirm autofocus>Accept</paper-button>
-      </div>
-    </paper-dialog>
-    <!-- /dialogs -->
-
     <!-- content: -->
+<div class="general-list general-list-bg">
+    <paper-icon-item>
+      <paper-item-body>
+        <div>
+          <paper-input label="Add items here" no-label-float value="[[list.name]]" id="lpNameSelector"></paper-input>
+        </div>
+      </paper-item-body>
+
+      <paper-icon-button icon="mdi:plus" class="list-action" on-click="addItem">
+      </paper-icon-button>
+    </paper-icon-item>
+  </div>
     <div class="general-list general-list-bg">
+
+
       <template is="dom-repeat" items="[[items]]" sort="_sortDone">
       <paper-icon-item>
         <template is="dom-if" if="{{!item.done}}">
@@ -155,10 +158,7 @@
       </paper-icon-item>
     </template>
   </div>
-
-  <paper-fab icon="mdi:plus" class="generic-fab" on-click="openAddDialog"></paper-fab>
-
-    <!-- /content -->
+  <!-- /content -->
   </template>
 
   <script>
@@ -195,15 +195,13 @@
         window.dispatchEvent(new CustomEvent('lists-changed'));
       }
 
-      openAddDialog(e) {
-        let addText = prompt("What do you want to add to this list?")
-        console.log(addText)
-
+      addItem(e) {
         let data = {
           listid: this.routeData.listid,
-          content: addText,
-          done: 0
+          content: this.$.lpNameSelector.value,
         }
+
+        this.$.lpNameSelector.value = "";
 
         this.$.addItem.body = data
         this.$.addItem.generateRequest()

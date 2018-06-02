@@ -18,7 +18,7 @@ module.exports = function(app,db){
     let listID = req.body.listID;
 
     let space = `INSERT INTO items(listid,content, done) VALUES (?, ?,?)`;
-    db.run(space, [req.body.listid,req.body.content, req.body.done], function(err) {
+    db.run(space, [req.body.listid,req.body.content, 0], function(err) {
       if (err) {console.log(err)}
 
       let ext = 0;
