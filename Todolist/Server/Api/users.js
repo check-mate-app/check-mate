@@ -23,6 +23,8 @@ module.exports = function(app,db){
     })
   });
 
+  //logout
+
   app.get('api/logout',function(req,res){
     //change all sessionvars to null
   });
