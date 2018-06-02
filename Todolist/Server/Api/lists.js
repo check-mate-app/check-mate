@@ -19,7 +19,7 @@ module.exports = function (app, db) {
   app.delete('/api/lists/:id', function(req, res) {
 
     var id = req.params.id;
-    space = "DELETE from lists WHERE id =" + (id.toString());
+    space = "DELETE from lists WHERE owner ="+req.session.id+" AND id =" + (id.toString());
     db.run(space, function(err) {
       if (err) {
         console.log(err)
@@ -32,7 +32,7 @@ module.exports = function (app, db) {
   //GET LIST BY ID
   app.get('/api/lists/:id', function(req, res) {
     id = req.params.id;
-    space = "select l.*, (select count(i.id) from items i where i.listid = l.id ) as items,(select count(i.id) from items i where i.listid = l.id  and i.done = 1) as done from lists l WHERE l.id = " + id.toString() + " group by l.id;";
+    space = "select l.*, (select count(i.id) from items i where i.listid = l.id ) as items,(select count(i.id) from items i where i.listid = l.id  and i.done = 1) as done from lists l WHERE owner ="+req.session.id+" AND l.id = " + id.toString() + " group by l.id;";
     db.each(space, function(err, row) {
       if (err) {console.log(err)}
       res.send(row);
@@ -45,13 +45,13 @@ module.exports = function (app, db) {
 
     id = req.params.id;
 
-    space = "UPDATE lists SET name=" + "'" + req.body.name + "'" + ", color=" + "'" + req.body.color + "'"+ ", icon=" + "'" + req.body.icon + "'" + "  WHERE id =" + (id.toString());
+    space = "UPDATE lists SET name=" + "'" + req.body.name + "'" + ", color=" + "'" + req.body.color + "'"+ ", icon=" + "'" + req.body.icon + "'" + "  WHERE owner ="+req.session.id+" AND id =" + (id.toString());
     db.all(space, function(err, rows) {
       if (err) {
         console.log(err)
       };
     })
-    space = "SELECT * FROM lists WHERE name = " + "'" + req.body.name + "'";
+    space = "SELECT * FROM lists WHERE owner ="+req.session.id+" AND name = " + "'" + req.body.name + "'";
     db.all(space, function(err, rows) {
       if (err) {
         console.log(err)
@@ -65,7 +65,7 @@ module.exports = function (app, db) {
 //send all items belonging to a list
 app.get('/api/lists/:listid/items',function(req,res){
 
-space = 'SELECT * FROM items WHERE listid='+req.params.listid;
+space = 'SELECT * FROM items WHERE owner ='+req.session.id+' AND listid='+req.params.listid;
 db.all(space,function(err,rows){
   if (err){console.log(err)}
   res.send(rows);

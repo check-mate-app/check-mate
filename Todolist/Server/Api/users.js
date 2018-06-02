@@ -4,31 +4,32 @@ module.exports = function(app,db){
 
  //login
  app.post('/api/login', function(req, res, next){
-   req.session.id = "test";
-   req.session.save();
    console.log(req.session.id);
-
-    let pw = req.body.password;
-    let name = req.body.name;
-
-    space = 'SELECT password,id FROM users WHERE name ="'+name+'"';
-    db.each(space,function(err,row){
-      if (err){console.log(err)}
-      let id = row.id;
-      console.log(passwordHash.verify(pw, row.password));
-      if(passwordHash.verify(pw, row.password)){
-
-          // var sessData = req.session;
+   if (req.session.id) {
+    console.log("User already logged in.");
+    res.send();
+    } else {
 
 
-          res.send({name: name});
+     let pw = req.body.password;
+     let name = req.body.name;
 
-      }
-      else{
-        res.status(401);
-        res.send({});
-      }
-    })
+     space = 'SELECT password,id FROM users WHERE name ="'+name+'"';
+     db.each(space,function(err,row){
+       if (err){console.log(err)}
+       console.log(passwordHash.verify(pw, row.password));
+       if(passwordHash.verify(pw, row.password)){
+            req.session.id = row.id;
+            res.send({id: req.session.id});
+       }
+       else{
+         res.status(401);
+         res.send({});
+       }
+     })
+
+
+     }
   });
 
   //logout
