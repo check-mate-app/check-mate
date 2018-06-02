@@ -237,16 +237,16 @@
       }
 
       listLoaded(item) {
-        this.set('pageTitle', item.detail.response[0].name)
+        this.set('pageTitle', item.detail.response.name)
       }
 
       updateList() {
-        window.history.pushState({}, null, '/list-preferences-view/' + this.routeData.listid);
+        window.history.pushState({}, null, '/app/list-preferences-view/' + this.routeData.listid);
         window.dispatchEvent(new CustomEvent('location-changed'));
       }
 
       deleteList() {
-        window.history.pushState({}, null, '/lists-view');
+        window.history.pushState({}, null, '/app/lists-view');
         window.dispatchEvent(new CustomEvent('location-changed'));
 
         this.$.deleteList.generateRequest()

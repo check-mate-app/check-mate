@@ -19,15 +19,17 @@
 <link rel="import" href="components/mdi.html">
 <link rel="import" href="components/profile-switcher.html">
 
+<link rel="import" href="login-view.html">
+
 <link rel="lazy-import" href="lists-view.html">
 <link rel="lazy-import" href="items-view.html">
 <link rel="lazy-import" href="my-view2.html">
 <link rel="lazy-import" href="my-view3.html">
 <link rel="lazy-import" href="my-view404.html">
 <link rel="lazy-import" href="list-preferences-view.html">
-<link rel="lazy-import" href="lists-favorites-view.html">
+<link rel="import" href="lists-favorites-view.html">
 
-<dom-module id="my-app">
+<dom-module id="app-view">
   <template>
     <style include="shared-styles">
       :host {
@@ -104,10 +106,6 @@
       }
     </style>
 
-    <app-location
-        route="{{route}}">
-    </app-location>
-
     <app-route
         route="{{route}}"
         pattern="[[rootPath]]:page"
@@ -124,14 +122,14 @@
         <paper-listbox selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation">
 
 
-          <a name="lists-favorites-view" href="[[rootPath]]lists-favorites-view">
+          <a name="lists-favorites-view" href="[[rootPath]]app/lists-favorites-view">
               <paper-icon-item>
                 <iron-icon icon="mdi:heart" item-icon slot="item-icon"></iron-icon><!--
                 --><span>Favorites</span>
               </paper-icon-item>
           </a>
 
-        <a name="lists-view" href="[[rootPath]]lists-view">
+        <a name="lists-view" href="[[rootPath]]app/lists-view">
             <paper-icon-item>
               <iron-icon icon="mdi:inbox-multiple" item-icon slot="item-icon"></iron-icon><!--
               --><span>My Lists</span>
@@ -139,7 +137,7 @@
         </a>
 
 
-        <a name="my-view2" href="[[rootPath]]my-view2">
+        <a name="my-view2" href="[[rootPath]]app/my-view2">
             <paper-icon-item>
               <iron-icon icon="mdi:folder-account" item-icon slot="item-icon"></iron-icon><!--
               --><span>Shared with me</span>
@@ -148,21 +146,21 @@
 
         <div class="divider"></div>
 
-        <a name="my-view3" href="[[rootPath]]my-view3">
+        <a name="my-view3" href="[[rootPath]]app/my-view3">
             <paper-icon-item>
               <iron-icon icon="mdi:settings" item-icon slot="item-icon"></iron-icon><!--
               --><span>Settings</span>
             </paper-icon-item>
         </a>
 
-        <a name="my-view3" href="[[rootPath]]my-view3">
+        <a name="my-view3" href="[[rootPath]]app/my-view3">
             <paper-icon-item>
               <iron-icon icon="mdi:information" item-icon slot="item-icon"></iron-icon><!--
               --><span>Information</span>
             </paper-icon-item>
         </a>
 
-        <a name="my-view3" href="[[rootPath]]my-view3">
+        <a name="my-view3" href="[[rootPath]]app/my-view3">
             <paper-icon-item>
               <iron-icon icon="mdi:logout" item-icon slot="item-icon"></iron-icon><!--
               --><span>Logout</span>
@@ -215,6 +213,7 @@
           <my-view3 name="my-view3"></my-view3>
           <my-view404 name="my-view404"></my-view404>
           <my-new-view name="new-view"></my-new-view>
+          <login-view name="login-view"></login-view>
         </iron-pages>
       </app-header-layout>
     </app-drawer-layout>
@@ -225,9 +224,9 @@
     // preventable, allowing for better scrolling performance.
     Polymer.setPassiveTouchGestures(true);
 
-    class MyApp extends Polymer.Element {
+    class AppView extends Polymer.Element {
       static get is() {
-        return 'my-app';
+        return 'app-view';
       }
 
       static get properties() {
@@ -280,6 +279,7 @@
         else if(page == 'lists-favorites-view') this.set('pageTitle', "Favorites")
         else if(page == 'list-preferences-view') this.set('pageTitle', "List Details")
         else if(page == 'items-view') this.set('pageTitle', "List Items")
+        else if(page == 'login-view') this.set('pageTitle', "Login")
       }
 
       _showPage404() {
@@ -297,6 +297,6 @@
       }
     }
 
-    window.customElements.define(MyApp.is, MyApp);
+    window.customElements.define(AppView.is, AppView);
   </script>
 </dom-module>

@@ -1,0 +1,51 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+
+<link rel="import" href="../bower_components/paper-checkbox/paper-checkbox.html">
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="shared-styles.html">
+
+<dom-module id="login-view">
+  <template>
+    <style include="shared-styles">
+    .cm-login-view {
+    }
+
+    </style>
+
+    <iron-ajax
+      id="login"
+      url="/api/login"
+      method="post"
+      content-type="application/json"
+      handle-as="json">
+    </iron-ajax>
+
+    <div class="cm-login-view">
+      <paper-input label="Username" value="" id="lv_username"></paper-input>
+      <paper-input label="Password" value="" id="lv_password" type="password"></paper-input>
+
+      <paper-button on-click="login">Login</paper-button>
+
+    </div>
+
+  </template>
+
+  <script>
+    class LoginView extends Polymer.Element {
+      static get is() { return 'login-view'; }
+
+      login(e) {
+        let data = {
+          name: this.$.lv_username.value,
+          password: this.$.lv_password.selected
+        }
+
+        this.$.login.body = data
+        this.$.login.generateRequest()
+      }
+    }
+
+    window.customElements.define(LoginView.is, LoginView);
+  </script>
+</dom-module>
