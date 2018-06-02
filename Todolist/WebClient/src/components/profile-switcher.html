@@ -1,0 +1,40 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../shared-styles.html">
+
+<dom-module id="profile-switcher">
+  <template>
+    <style include="shared-styles">
+
+    .profile-switcher {
+      padding: 16px;
+    }
+
+    .profile-switcher h1 {
+      margin: 0;
+      margin-bottom: -6px;
+    }
+
+    .profile-switcher .ps-name {
+      font-size: .8em;
+      color: #5f6368;
+    }
+
+    </style>
+    <div class="profile-switcher">
+      <h1>Check Mate</h1>
+      <span class="ps-name">[[name]]</span>
+    </div>
+  </template>
+
+  <script>
+  class ProfileSwitcher extends Polymer.Element {
+    static get is() { return 'profile-switcher'; }
+
+    static get properties() { return {
+      name: String
+    }}
+  }
+
+  window.customElements.define(ProfileSwitcher.is, ProfileSwitcher);
+  </script>
+</dom-module>

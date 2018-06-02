@@ -4,13 +4,15 @@ const DEVELOPMENT = true;
 const STATIC_FOLDER = DEVELOPMENT ? __dirname + '/../WebClient/' : __dirname + '/../WebClient/build/es5-bundled/';
 const INDEX_HTML = DEVELOPMENT ? __dirname + '/../WebClient/index.html' : __dirname + '/../WebClient/build/es5-bundled/index.html';
 // END CONFIG
-
+ const passwordHash = require('password-hash');
 const express = require('express');
 const path = require('path');
 const bodyParser = require('body-parser');
 const sqlite3 = require('sqlite3').verbose();
 
 const app = express();
+
+
 
 
 // Directly serve all files in public/

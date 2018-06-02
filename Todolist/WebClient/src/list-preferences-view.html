@@ -1,0 +1,255 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../bower_components/paper-checkbox/paper-checkbox.html">
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="shared-styles.html">
+
+<!-- Actual View -->
+<dom-module id="list-preferences-view">
+  <template>
+    <style include="shared-styles">
+      :host {
+        display: block;
+      }
+
+      .lp-color-option {
+        display: inline-block;
+        width: 32px;
+        height: 32px;
+        border-radius: 100px;
+        box-sizing: border-box;
+        position: relative;
+        margin-left: 4px;
+      }
+
+      .lp-color-option.iron-selected::before {
+        content: ' ';
+        width: 28px;
+        height: 28px;
+        border-radius: 100px;
+        position: absolute;
+        top: 2px;
+        left: 2px;
+        border: 1px solid #fff;
+        box-sizing: border-box;
+      }
+
+      .lp-color-option.color-0 {
+        background: #414345;
+      }
+
+      .lp-color-option.color-1 {
+        background: #eaafc8;
+      }
+
+      .lp-color-option.color-2 {
+        background: #4389A2;
+      }
+
+      .lp-color-option.color-3 {
+        background: #348AC7;
+
+      }
+
+      .lp-color-option.color-4 {
+        background: #71B280;
+      }
+
+      .lp-color-option.color-5 {
+        background: #f5af19;
+      }
+
+      .lp-color-option.color-6 {
+        background: #93291E;
+      }
+
+      .lp-color-option.color-7 {
+        background: #fc6767;
+      }
+
+      .lp-color-option.color-8 {
+        background: #480048;
+      }
+
+      .preferences-list paper-icon-button.iron-selected {
+        color: var(--primary-color);
+      }
+
+      .preferences-list {
+        margin-top: 5px;
+      }
+
+      .preferences-list .lp-section {
+        padding: 24px;
+        border-bottom: 1px solid #e4e4e4;
+        background: #fff;
+        vertical-align: middle;
+      }
+
+      .preferences-list .lp-section:first-child {
+        border-top: 1px solid #e4e4e4;
+      }
+
+    </style>
+
+    <!-- route -->
+    <app-route
+        route="[[route]]"
+        pattern="/:listid"
+        data="{{routeData}}"></app-route>
+
+    <!-- api -->
+    <iron-ajax
+      id="getList"
+      auto=""
+      url="/api/lists/[[routeData.listid]]"
+      method="get"
+      handle-as="json"
+      last-response="{{list}}">
+    </iron-ajax>
+
+    <iron-ajax
+      id="updateList"
+      url="/api/lists/[[routeData.listid]]"
+      method="put"
+      content-type="application/json"
+      handle-as="json">
+    </iron-ajax>
+
+    <iron-ajax
+      id="addList"
+      url="/api/lists"
+      method="post"
+      content-type="application/json"
+      handle-as="json">
+    </iron-ajax>
+    <!-- /api -->
+
+    <!-- content: -->
+
+    <div>
+
+          <div class="preferences-list">
+
+            <div class="lp-section">
+              <paper-input label="List Title" value="[[list.name]]" id="lpNameSelector"></paper-input>
+            </div>
+
+            <div class="lp-section">
+              <iron-selector attr-for-selected="icon" selected="[[list.icon]]" id="lpIconSelector">
+                <paper-icon-button icon="mdi:cart" on-click="selectIcon"></paper-icon-button>
+                <paper-icon-button icon="mdi:food" on-click="selectIcon"></paper-icon-button>
+                <paper-icon-button icon="mdi:checkbox-multiple-marked-circle-outline" on-click="selectIcon"></paper-icon-button>
+                <paper-icon-button icon="mdi:calendar-clock" on-click="selectIcon"></paper-icon-button>
+                <paper-icon-button icon="mdi:school" on-click="selectIcon"></paper-icon-button>
+                <paper-icon-button icon="mdi:map-marker-radius" on-click="selectIcon"></paper-icon-button>
+                <paper-icon-button icon="mdi:lead-pencil" on-click="selectIcon"></paper-icon-button>
+                <paper-icon-button icon="mdi:folder-outline" on-click="selectIcon"></paper-icon-button>
+                <paper-icon-button icon="mdi:bookmark" on-click="selectIcon"></paper-icon-button>
+                <paper-icon-button icon="mdi:heart" on-click="selectIcon"></paper-icon-button>
+                <paper-icon-button icon="mdi:bell-ring" on-click="selectIcon"></paper-icon-button>
+                <paper-icon-button icon="mdi:cake-variant" on-click="selectIcon"></paper-icon-button>
+                <paper-icon-button icon="mdi:cash" on-click="selectIcon"></paper-icon-button>
+                <paper-icon-button icon="mdi:routes" on-click="selectIcon"></paper-icon-button>
+                <paper-icon-button icon="mdi:pill" on-click="selectIcon"></paper-icon-button>
+                <paper-icon-button icon="mdi:traffic-light" on-click="selectIcon"></paper-icon-button>
+              </iron-selector>
+            </div>
+
+
+            <div class="lp-section">
+              <iron-selector attr-for-selected="data-color" selected="[[list.color]]" id="lpColorSelector">
+                <div class="lp-color-option color-0" data-color="0"></div>
+                <div class="lp-color-option color-1" data-color="1"></div>
+                <div class="lp-color-option color-2" data-color="2"></div>
+                <div class="lp-color-option color-3" data-color="3"></div>
+                <div class="lp-color-option color-4" data-color="4"></div>
+                <div class="lp-color-option color-5" data-color="5"></div>
+                <div class="lp-color-option color-6" data-color="6"></div>
+                <div class="lp-color-option color-7" data-color="7"></div>
+                <div class="lp-color-option color-8" data-color="8"></div>
+              </iron-selector>
+            </div>
+
+            <div class="lp-section">
+              <paper-icon-item>
+                <paper-checkbox slot="item-icon" id="lpFavoriteCheckbox" checked="{{list.favorite}}"></paper-checkbox>
+
+                <paper-item-body>
+                  <div>Mark as favorite</div>
+                </paper-item-body>
+              </paper-icon-item>
+            </div>
+
+          </div>
+
+    </div>
+
+
+    <paper-fab icon="mdi:content-save" class="generic-fab" on-click="saveChanges"></paper-fab>
+
+    <!-- /content -->
+  </template>
+
+  <script>
+    class ListPreferencesView extends Polymer.Element {
+      static get is() { return 'list-preferences-view'; }
+
+      static get properties() { return {
+
+        icon: String,
+        listid: Object,
+        route: Object,
+        routeData: Object,
+        pageTitle: {
+                type: String,
+                notify:true,
+            }
+      }}
+
+
+      ready() {
+        super.ready()
+
+      }
+
+      selectIcon(e) {
+        console.log(e.target.icon)
+        this.icon = e.target.icon
+      }
+
+      saveChanges(e) {
+        if (this.routeData.listid == "new") {
+          let data = {
+            name: this.$.lpNameSelector.value,
+            icon: this.$.lpIconSelector.selected,
+            color: this.$.lpColorSelector.selected,
+            owner: "vigonotion",
+            favorite: this.$.lpFavoriteCheckbox.checked ? 1 : 0
+          }
+
+          this.$.addList.body = data
+          this.$.addList.generateRequest()
+        } else {
+          let data = {
+            name: this.$.lpNameSelector.value,
+            icon: this.$.lpIconSelector.selected,
+            color: this.$.lpColorSelector.selected,
+            favorite: this.$.lpFavoriteCheckbox.checked ? 1 : 0
+          }
+
+          this.$.updateList.body = data
+          this.$.updateList.generateRequest()
+        }
+
+        window.dispatchEvent(new CustomEvent('lists-changed'));
+
+        window.history.pushState({}, null, '/lists-view');
+        window.dispatchEvent(new CustomEvent('location-changed'));
+
+      }
+
+    }
+
+    window.customElements.define(ListPreferencesView.is, ListPreferencesView);
+  </script>
+</dom-module>

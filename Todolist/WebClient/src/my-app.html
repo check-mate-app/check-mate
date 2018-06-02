@@ -14,17 +14,22 @@
 <link rel="import" href="../bower_components/paper-item/paper-icon-item.html">
 <link rel="import" href="../bower_components/paper-item/paper-item-body.html">
 <link rel="import" href="../bower_components/paper-listbox/paper-listbox.html">
+<link rel="import" href="../bower_components/paper-fab/paper-fab.html">
+<link rel="import" href="../bower_components/iron-ajax/iron-ajax.html">
 <link rel="import" href="components/mdi.html">
+<link rel="import" href="components/profile-switcher.html">
 
 <link rel="lazy-import" href="lists-view.html">
+<link rel="lazy-import" href="items-view.html">
 <link rel="lazy-import" href="my-view2.html">
 <link rel="lazy-import" href="my-view3.html">
 <link rel="lazy-import" href="my-view404.html">
-<link rel="lazy-import" href="my-new-view.html">
+<link rel="lazy-import" href="list-preferences-view.html">
+<link rel="lazy-import" href="lists-favorites-view.html">
 
 <dom-module id="my-app">
   <template>
-    <style>
+    <style include="shared-styles">
       :host {
         --app-primary-color: #4285f4;
         --app-secondary-color: black;
@@ -91,11 +96,16 @@
       app-toolbar [main-title] {
         margin-left: 24px;
       }
+
+      a paper-icon-button,
+      a:active paper-icon-button,
+      a:visited paper-icon-button {
+        color: #000000;
+      }
     </style>
 
     <app-location
-        route="{{route}}"
-        url-space-regex="^[[rootPath]]">
+        route="{{route}}">
     </app-location>
 
     <app-route
@@ -108,9 +118,18 @@
     <app-drawer-layout fullbleed narrow="{{narrow}}">
       <!-- Drawer content -->
       <app-drawer id="drawer" slot="drawer" swipe-open="[[narrow]]">
-        <app-toolbar>Menu</app-toolbar>
+        <profile-switcher name="John Doe">
+        </profile-switcher>
 
         <paper-listbox selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation">
+
+
+          <a name="lists-favorites-view" href="[[rootPath]]lists-favorites-view">
+              <paper-icon-item>
+                <iron-icon icon="mdi:heart" item-icon slot="item-icon"></iron-icon><!--
+                --><span>Favorites</span>
+              </paper-icon-item>
+          </a>
 
         <a name="lists-view" href="[[rootPath]]lists-view">
             <paper-icon-item>
@@ -122,15 +141,31 @@
 
         <a name="my-view2" href="[[rootPath]]my-view2">
             <paper-icon-item>
-              <iron-icon icon="mdi:circle" item-icon slot="item-icon"></iron-icon><!--
-              --><span>My View 2</span>
+              <iron-icon icon="mdi:folder-account" item-icon slot="item-icon"></iron-icon><!--
+              --><span>Shared with me</span>
+            </paper-icon-item>
+        </a>
+
+        <div class="divider"></div>
+
+        <a name="my-view3" href="[[rootPath]]my-view3">
+            <paper-icon-item>
+              <iron-icon icon="mdi:settings" item-icon slot="item-icon"></iron-icon><!--
+              --><span>Settings</span>
             </paper-icon-item>
         </a>
 
         <a name="my-view3" href="[[rootPath]]my-view3">
             <paper-icon-item>
-              <iron-icon icon="mdi:circle" item-icon slot="item-icon"></iron-icon><!--
-              --><span>My View 3</span>
+              <iron-icon icon="mdi:information" item-icon slot="item-icon"></iron-icon><!--
+              --><span>Information</span>
+            </paper-icon-item>
+        </a>
+
+        <a name="my-view3" href="[[rootPath]]my-view3">
+            <paper-icon-item>
+              <iron-icon icon="mdi:logout" item-icon slot="item-icon"></iron-icon><!--
+              --><span>Logout</span>
             </paper-icon-item>
         </a>
 
@@ -146,21 +181,40 @@
 
         <app-header slot="header" fixed effects="waterfall" reveals>
           <app-toolbar>
-            <paper-icon-button icon="mdi:menu" drawer-toggle></paper-icon-button>
-            <div main-title>My Lists</div>
+            <template is="dom-if" if="{{!_shallShowBack(page)}}">
+              <paper-icon-button icon="mdi:menu" drawer-toggle></paper-icon-button>
+            </template>
+
+            <template is="dom-if" if="{{_shallShowBack(page)}}">
+                <paper-icon-button icon="mdi:arrow-left" onclick="javascript:window.history.back()"></paper-icon-button>
+            </template>
+
+            <div main-title>[[pageTitle]]</div>
+
+            <!-- Toolbar Buttons -->
+            <iron-pages
+                selected="[[page]]"
+                attr-for-selected="view"
+                role="main">
+              <items-toolbar view="items-view" route="{{subroute}}"></items-view>
+            </iron-pages>
+            <!-- /Toolbar Buttons -->
           </app-toolbar>
         </app-header>
 
         <iron-pages
             selected="[[page]]"
             attr-for-selected="name"
-            fallback-selection="view404"
+            fallback-selection="my-view404"
             role="main">
-          <lists-view name="lists-view"></lists-view>
+          <lists-favorites-view name="lists-favorites-view" route="{{subroute}}" page-title="{{pageTitle}}"></lists-favorites-view>
+          <lists-view name="lists-view" route="{{subroute}}" page-title="{{pageTitle}}"></lists-view>
+          <items-view name="items-view" route="{{subroute}}" page-title="{{pageTitle}}"></items-view>
+          <list-preferences-view name="list-preferences-view" route="{{subroute}}" page-title="{{pageTitle}}"></list-preferences-view>
           <my-view2 name="my-view2"></my-view2>
           <my-view3 name="my-view3"></my-view3>
           <my-view404 name="my-view404"></my-view404>
-          <my-new-view name="new-view"></my-view404>
+          <my-new-view name="new-view"></my-new-view>
         </iron-pages>
       </app-header-layout>
     </app-drawer-layout>
@@ -178,6 +232,11 @@
 
       static get properties() {
         return {
+          pageTitle: {
+                type: String,
+                notify:true,
+                value: "Test Title",
+            },
           page: {
             type: String,
             reflectToAttribute: true,
@@ -216,10 +275,25 @@
           null,
           this._showPage404.bind(this),
           true);
+
+        if(page == 'lists-view') this.set('pageTitle', "My Lists")
+        else if(page == 'lists-favorites-view') this.set('pageTitle', "Favorites")
+        else if(page == 'list-preferences-view') this.set('pageTitle', "List Details")
+        else if(page == 'items-view') this.set('pageTitle', "List Items")
       }
 
       _showPage404() {
         this.page = 'my-view404';
+      }
+
+      _shallShowBack(title) {
+        return title == "items-view" || title == "list-preferences-view";
+      }
+
+      ready() {
+        super.ready()
+        //this.pageTitle = "My Lists"
+
       }
     }
 

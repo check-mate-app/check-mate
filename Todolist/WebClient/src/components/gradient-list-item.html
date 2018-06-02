@@ -1,0 +1,151 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../shared-styles.html">
+
+<dom-module id="gradient-list-item">
+  <template>
+    <style include="shared-styles">
+
+    .gli-card {
+      margin: 24px;
+      padding: 16px;
+      color: #fff;
+      border-radius: 5px;
+      background: #fff;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.12), 0 1px 2px rgba(0,0,0,0.24);
+    }
+
+    .gli-gradient-0 {
+      background: #232526;
+      background: -webkit-linear-gradient(to right, #414345, #232526);
+      background: linear-gradient(to right, #414345, #232526);
+
+    }
+
+    .gli-gradient-1 {
+      background: #654ea3;
+      background: -webkit-linear-gradient(to right, #eaafc8, #654ea3);
+      background: linear-gradient(to right, #eaafc8, #654ea3);
+    }
+
+    .gli-gradient-2 {
+      background: #5C258D;
+      background: -webkit-linear-gradient(to right, #4389A2, #5C258D);
+      background: linear-gradient(to right, #4389A2, #5C258D);
+    }
+
+    .gli-gradient-3 {
+      background: #7474BF;
+      background: -webkit-linear-gradient(to right, #348AC7, #7474BF);
+      background: linear-gradient(to right, #348AC7, #7474BF);
+    }
+    .gli-gradient-4 {
+      background: #134E5E;
+      background: -webkit-linear-gradient(to right, #71B280, #134E5E);
+      background: linear-gradient(to right, #71B280, #134E5E);
+
+    }
+    .gli-gradient-5 {
+      background: #f12711;
+      background: -webkit-linear-gradient(to right, #f5af19, #f12711);
+      background: linear-gradient(to right, #f5af19, #f12711);
+    }
+
+    .gli-gradient-6 {
+      background: #ED213A;
+      background: -webkit-linear-gradient(to right, #93291E, #ED213A);
+      background: linear-gradient(to right, #93291E, #ED213A);
+    }
+
+    .gli-gradient-7 {
+      background: #ec008c;
+      background: -webkit-linear-gradient(to right, #fc6767, #ec008c);
+      background: linear-gradient(to right, #fc6767, #ec008c);
+    }
+
+    .gli-gradient-8 {
+      background: #C04848;
+      background: -webkit-linear-gradient(to right, #480048, #C04848);
+      background: linear-gradient(to right, #480048, #C04848);
+    }
+
+    .gli-card iron-icon {
+      color: #fff;
+    }
+
+    .gli-card .gli-card-content,
+    .gli-card .gli-card-content h1 {
+      color: #fff;
+    }
+
+    .gli-card .gli-card-content h1 {
+      margin: 0;
+      margin-bottom: -6px;
+    }
+
+    .gli-card-content-wrapper {
+      display: table;
+      width: 100%;
+    }
+
+    .gli-card-icon,
+    .gli-card-content,
+    .gli-card-action {
+      display: table-cell;
+      vertical-align: middle;
+      padding: 0 16px;
+    }
+
+    .gli-card-content {
+      width: 100%;
+      padding: 0 20px;
+    }
+
+    .gli-progress-bar {
+      display: inline-block;
+      width: 100%;
+      height: 6px;
+      border-radius: 10px;
+      background: rgba(255,255,255,0.3);
+      position: relative;
+      overflow: hidden;
+    }
+
+    .gli-progress-bar div {
+      display: inline-block;
+      width: 60%;
+      height: 100%;
+      background: rgba(255,255,255,0.8);
+      position: absolute;
+      border-radius: 10px;
+    }
+
+
+    </style>
+    <div>
+      <div class$="gli-card gli-gradient gli-gradient-[[color]]">
+        <div class="gli-card-content-wrapper">
+          <div class="gli-card-icon">
+            <slot name="icon"></slot>
+          </div>
+          <div class="gli-card-content">
+            <h1>[[name]]</h1>
+            <div class="gli-progress-bar">
+              <div style$="width: [[progress]]%;"></div>
+            </div>
+          </div>
+          <div class="gli-card-action">
+            <iron-icon icon="mdi:chevron-right" item-icon slot="item-icon"></iron-icon>
+          </div>
+        </div>
+      </div>
+    </div>
+  </template>
+
+  <script>
+  class GradientListItem extends Polymer.Element {
+    static get is() { return 'gradient-list-item'; }
+  }
+
+  window.customElements.define(GradientListItem.is, GradientListItem);
+  </script>
+</dom-module>

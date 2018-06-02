@@ -2,7 +2,7 @@ module.exports = function (app, db) {
 
   //SHOW LISTS
   app.get('/api/lists', function(req, res) {
-    db.all(`SELECT * FROM lists`, function(err, rows) {
+    db.all(`select l.*, (select count(i.id) from items i where i.listid = l.id ) as items,(select count(i.id) from items i where i.listid = l.id  and i.done = 1) as done from lists l group by l.id;`, function(err, rows) {
       if (err) {
         console.error(err.message);
       } else {
@@ -11,18 +11,16 @@ module.exports = function (app, db) {
     });
   });
 
-  // //SHOW ALL LISTS WHERE USER IS OWNER
-  // app.get('/api/lists', function(req, res) {
-  //   let userLists = req.body.owner;
-  //   let space = "SELECT * FROM lists WHERE owner = '" + userLists + "'";
-  //   db.all(space, function(err, rows) {
-  //     if (err) {
-  //       console.error(err.message);
-  //     } else {
-  //       res.send(rows);
-  //     }
-  //   });
-  // });
+  app.get('/api/lists/favorites', function(req, res) {
+    db.all(`select l.*, (select count(i.id) from items i where i.listid = l.id ) as items,(select count(i.id) from items i where i.listid = l.id  and i.done = 1) as done from lists l where favorite = 1 group by l.id;`, function(err, rows) {
+      if (err) {
+        console.error(err.message);
+      } else {
+        res.send(rows);
+      }
+    });
+  });
+
 
 
   ////DELETE
@@ -35,7 +33,6 @@ module.exports = function (app, db) {
         console.log(err)
       }
     })
-    console.log("deleted item with id of: " + id);
     res.send({})
   });
 
@@ -43,16 +40,10 @@ module.exports = function (app, db) {
   //GET LIST BY ID
   app.get('/api/lists/:id', function(req, res) {
     id = req.params.id;
-    console.log("ID " + id);
-
-    space = "SELECT * FROM lists WHERE id =" + (id.toString());
-    db.all(space, function(err, rows) {
-      if (err) {
-        console.log(err)
-      };
-      console.log("log");
-      res.send(rows);
-      //missing: items on the list are not included in res.send yet
+    space = "select l.*, (select count(i.id) from items i where i.listid = l.id ) as items,(select count(i.id) from items i where i.listid = l.id  and i.done = 1) as done from lists l WHERE l.id = " + id.toString() + " group by l.id;";
+    db.each(space, function(err, row) {
+      if (err) {console.log(err)}
+      res.send(row);
     })
   });
 
@@ -62,7 +53,7 @@ module.exports = function (app, db) {
 
     id = req.params.id;
 
-    space = "UPDATE lists SET name=" + "'" + req.body.name + "'" + " WHERE id =" + (id.toString());
+    space = "UPDATE lists SET name=" + "'" + req.body.name + "'" + ", color=" + "'" + req.body.color + "'"+ ", icon=" + "'" + req.body.icon + "'"+ ", favorite=" + "'" + req.body.favorite + "'" + "  WHERE id =" + (id.toString());
     db.all(space, function(err, rows) {
       if (err) {
         console.log(err)
@@ -79,12 +70,22 @@ module.exports = function (app, db) {
 
   });
 
+//send all items belonging to a list
+app.get('/api/lists/:listid/items',function(req,res){
+
+space = 'SELECT * FROM items WHERE listid='+req.params.listid;
+db.all(space,function(err,rows){
+  if (err){console.log(err)}
+  res.send(rows);
+})
+
+});
+
 
   //ADD
   app.post('/api/lists', function(req, res) {
-    console.log(req.body);
-    let space = `INSERT INTO lists(name, icon, owner) VALUES (?, ?, ?)`;
-    db.run(space, [req.body.name, req.body.icon, req.body.owner], function(err) {
+    let space = `INSERT INTO lists(name, icon, owner, color ) VALUES (?, ?, ?, ?)`;
+    db.run(space, [req.body.name, req.body.icon, req.body.owner, req.body.color], function(err) {
       if (err) {
         console.log(err);
       }
@@ -94,8 +95,10 @@ module.exports = function (app, db) {
       if (err) {
         console.log(err)
       };
-      console.log("log");
       res.send(rows);
     })
   });
+
+
+  //needed: function that counts a lists items and how many are done
 }
