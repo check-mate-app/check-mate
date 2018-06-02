@@ -1,66 +1,99 @@
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="shared-styles.html">
+<link rel="import" href="components/gradient-list-item.html">
 
 <dom-module id="lists-view">
   <template>
-    <style>
+    <style include="shared-styles">
       :host {
         display: block;
       }
 
-    paper-listbox.lists-list {
-      margin-top: 5px;
-    }
-
-    paper-listbox.lists-list a {
-      color: inherit;
-      text-decoration: none;
-    }
-
-    paper-listbox.lists-list a paper-icon-item {
-      padding: 0 24px;
-
-      border-bottom: 1px solid #e4e4e4;
-    }
-
-    paper-listbox.lists-list a:first-child paper-icon-item {
-      border-top: 1px solid #e4e4e4;
-    }
-
     </style>
+
+    <!-- api -->
+
+    <iron-ajax
+      id="getLists"
+      auto=""
+      url="/api/lists"
+      method="get"
+      handle-as="json"
+      last-response="{{lists}}">
+    </iron-ajax>
+
+    <iron-ajax
+      id="addList"
+      url="/api/lists"
+      method="post"
+      content-type="application/json"
+      handle-as="json">
+    </iron-ajax>
+
+    <!-- /api -->
 
     <!-- content: -->
 
-<paper-listbox class="lists-list">
-  <a href="#">
-  <paper-icon-item>
-    <iron-icon icon="mdi:cart" item-icon slot="item-icon"></iron-icon>
-    <paper-item-body two-line>
-      <div>Groceries</div>
-      <div secondary>Shared with: Family</div>
-    </paper-item-body>
-    <paper-icon-button icon="mdi:chevron-right" alt="favourite this!">
-    </paper-icon-button>
-  </paper-icon-item>
-  </a>
-  <a href="#">
-  <paper-icon-item>
-    <iron-icon icon="mdi:checkbox-multiple-marked-circle-outline" item-icon slot="item-icon"></iron-icon>
-    <paper-item-body two-line>
-      <div>Todo-List</div>
-    </paper-item-body>
-    <paper-icon-button icon="mdi:chevron-right" alt="favourite this!">
-    </paper-icon-button>
-  </paper-icon-item>
-  </a>
-</paper-listbox>
+<div class="lists-list general-list general-list-link">
+  <template is="dom-repeat" items="[[lists]]">
+  <a href="/items-view/[[item.id]]" data-list-id$="[[item.id]]">
 
+  <gradient-list-item
+    name="[[item.name]]"
+    color="[[item.color]]"
+    progress="{{_progress(item.items, item.done)}}">
+    <iron-icon icon="[[item.icon]]" item-icon slot="icon"></iron-icon>
+  </gradient-list-item>
+
+  </a>
+</template>
+</div>
+
+<paper-fab icon="mdi:plus" class="generic-fab" on-click="openAddDialog"></paper-fab>
 
     <!-- /content -->
   </template>
 
+
   <script>
     class ListsView extends Polymer.Element {
       static get is() { return 'lists-view'; }
+
+      static get properties() { return {
+        pageTitle: {
+                type: String,
+                notify:true,
+            }
+      }}
+
+      openAddDialog(e) {
+        window.history.pushState({}, null, '/list-preferences-view/new');
+        window.dispatchEvent(new CustomEvent('location-changed'));
+      }
+
+      reloadLists(e) {
+        console.log("reload")
+        this.$.getLists.generateRequest()
+      }
+
+      ready() {
+        super.ready()
+      }
+
+      connectedCallback() {
+        super.connectedCallback();
+        window.addEventListener('lists-changed', this.reloadLists.bind(this));
+      }
+
+      disconnectedCallback() {
+        super.disconnectedCallback();
+        window.removeEventListener('lists-changed', this.reloadLists.bind(this));
+      }
+
+      _progress(items, done) {
+        if(items == 0 || done == 0) return 0
+        return (done/items)*100
+      }
     }
 
     window.customElements.define(ListsView.is, ListsView);

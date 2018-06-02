@@ -2,7 +2,7 @@ module.exports = function (app, db) {
 
   //SHOW LISTS
   app.get('/api/lists', function(req, res) {
-    db.all(`SELECT * FROM lists`, function(err, rows) {
+    db.all(`select l.*, (select count(i.id) from items i where i.listid = l.id ) as items,(select count(i.id) from items i where i.listid = l.id  and i.done = 1) as done from lists l group by l.id;`, function(err, rows) {
       if (err) {
         console.error(err.message);
       } else {
@@ -30,31 +30,10 @@ module.exports = function (app, db) {
   //GET LIST BY ID
   app.get('/api/lists/:id', function(req, res) {
     id = req.params.id;
-      let itemNumber = [];
-      let itemsDone = [];
-
-      space ='SELECT * FROM items WHERE listid = "'+req.params.id+'"';
-      db.each(space,function(err,row){
-        if(err){console.log(err)}
-        itemNumber.push(row.id)
-      })
-
-      space ='SELECT * FROM items WHERE listid = "'+req.params.id+'" AND done = 1';
-      db.each(space,function(err,row){
-        if(err){console.log(err)}
-        itemsDone.push(row.id)
-      })
-
-      setTimeout(function(){}, 10);
-
-    space = "SELECT * FROM lists WHERE id =" + (id.toString());
+    space = "select l.*, (select count(i.id) from items i where i.listid = l.id ) as items,(select count(i.id) from items i where i.listid = l.id  and i.done = 1) as done from lists l WHERE l.id = " + id.toString() + " group by l.id;";
     db.each(space, function(err, row) {
       if (err) {console.log(err)}
-
-      // row.push("itemNumb" : itemNumber.length);
-      // row.push("itemsDon" : itemsDone.length);
-      res.send([row,"items: " + itemNumber.length, "done: "+itemsDone.length]);
-      // res.send(row);
+      res.send(row);
     })
   });
 
@@ -64,7 +43,7 @@ module.exports = function (app, db) {
 
     id = req.params.id;
 
-    space = "UPDATE lists SET name=" + "'" + req.body.name + "'" + " WHERE id =" + (id.toString());
+    space = "UPDATE lists SET name=" + "'" + req.body.name + "'" + ", color=" + "'" + req.body.color + "'"+ ", icon=" + "'" + req.body.icon + "'" + "  WHERE id =" + (id.toString());
     db.all(space, function(err, rows) {
       if (err) {
         console.log(err)
@@ -96,7 +75,7 @@ db.all(space,function(err,rows){
   //ADD
   app.post('/api/lists', function(req, res) {
     let space = `INSERT INTO lists(name, icon, owner, color ) VALUES (?, ?, ?, ?)`;
-    db.run(space, [req.body.name, req.body.icon, req.body.owner, 0], function(err) {
+    db.run(space, [req.body.name, req.body.icon, req.body.owner, req.body.color], function(err) {
       if (err) {
         console.log(err);
       }
