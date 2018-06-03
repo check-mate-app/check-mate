@@ -14,22 +14,22 @@ module.exports = function(app,db){
   //ADD item
 
   app.post('/api/items', function(req, res) {
-    console.log(req.body.listID);
-    let listID = req.body.listID;
+    console.log(req.body)
+    let space = `INSERT INTO items(listid, content, done) VALUES (${req.body.listid}, '${req.body.content}', 0)`;
+    db.run(space, function(err, row) {
+      if (err) {
+        console.log(err)
+      }
 
-    let space = `INSERT INTO items(listid,content, done) VALUES (?, ?,?)`;
-    db.run(space, [req.body.listid,req.body.content, 0], function(err) {
-      if (err) {console.log(err)}
-
-      let ext = 0;
-      space =  'SELECT * FROM items WHERE id IN (select max(id) from items)';
-      db.each(space, function(err,row){
-        if (err){
-          console.log(err)
-        }
-        let itemID = row.id;
-
-      })
+//
+//       let ext = 0;
+//       space =  'SELECT * FROM items WHERE id IN (select max(id) from items)';
+//       db.each(space, function(err,row){
+//         if (err){
+// console.log("Error2: " + err)        }
+//         let itemID = row.id;
+//
+//       })
     })
     //content
     //done

@@ -32,6 +32,16 @@ module.exports = function (app, db) {
   });
 
 
+  //GET LIST BY FAVORITES
+  app.get('/api/lists/favorites', function(req, res) {
+    id = req.params.id;
+    space = "select l.*, (select count(i.id) from items i where i.listid = l.id ) as items,(select count(i.id) from items i where i.listid = l.id  and i.done = 1) as done from lists l WHERE owner ="+req.session.id+" AND l.favorite = 1 group by l.id;";
+    db.all(space, function(err, rows) {
+      if (err) {console.log(err)} else
+      res.send(rows);
+    })
+  });
+
   //GET LIST BY ID
   app.get('/api/lists/:id', function(req, res) {
     id = req.params.id;
@@ -48,7 +58,7 @@ module.exports = function (app, db) {
 
     id = req.params.id;
 
-    space = "UPDATE lists SET name=" + "'" + req.body.name + "'" + ", color=" + "'" + req.body.color + "'"+ ", icon=" + "'" + req.body.icon + "'" + "  WHERE owner ="+req.session.id+" AND id =" + (id.toString());
+    space = "UPDATE lists SET name=" + "'" + req.body.name + "'" + ", color=" + "'" + req.body.color + "'"+ ", icon=" + "'" + req.body.icon + "', favorite='" + req.body.favorite + "' WHERE id =" + (id.toString());
     db.all(space, function(err, rows) {
       if (err) {
         console.log(err)
@@ -68,9 +78,9 @@ module.exports = function (app, db) {
 //send all items belonging to a list
 app.get('/api/lists/:listid/items',function(req,res){
 
-space = 'SELECT * FROM items WHERE owner ='+req.session.id+' AND listid='+req.params.listid;
+space = `select items.* from items inner join lists on items.listid = lists.id where lists.owner = ${req.session.id} and items.listid = ${req.params.listid}`;
 db.all(space,function(err,rows){
-  if (err){console.log(err)}
+  if (err){console.log("dadö"+err)}
   res.send(rows);
 })
 
@@ -79,8 +89,8 @@ db.all(space,function(err,rows){
 
   //ADD
   app.post('/api/lists', function(req, res) {
-    let space = `INSERT INTO lists(name, icon, owner, color ) VALUES (?, ?, ?, ?)`;
-    db.run(space, [req.body.name, req.body.icon, req.session.id, req.body.color], function(err) {
+    let space = `INSERT INTO lists(name, icon, owner, color, favorite ) VALUES (?, ?, ?, ?, ?)`;
+    db.run(space, [req.body.name, req.body.icon, req.session.id, req.body.color, req.body.favorite], function(err) {
       if (err) {
         console.log(err);
       }

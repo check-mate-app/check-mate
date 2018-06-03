@@ -25,7 +25,7 @@ module.exports = function(app,db){
        if(rows === undefined || rows.length == 0 ||
           !passwordHash.verify(req.body.password, rows[0].password)) {
          res.status(401);
-         res.send({});
+         res.send({error: "Username or password wrong.<br>Please try again."});
          return
        } else {
          req.session.id = rows[0].id;
@@ -39,9 +39,10 @@ module.exports = function(app,db){
   });
 
   //logout
-  app.get('api/logout',function(req,res){
+  app.get('/api/logout',function(req,res){
     //change all sessionvars to null
-    delete req.session.id;
+    delete req.session.id
+    res.send()
   });
 
   //Show all users
