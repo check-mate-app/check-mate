@@ -42,7 +42,6 @@ module.exports = function (app, db) {
 
   //GET LIST BY FAVORITES
   app.get('/api/lists/favorites', function(req, res) {
-    id = req.params.id;
     space = `
     select l.*,
       (select count(i.id) from items i where i.listid = l.id ) as items,
@@ -105,7 +104,7 @@ module.exports = function (app, db) {
 
       // Get collaborators
       if(row.shared == 1) {
-        space = `select name, email, owner from collaborators
+        space = `select userid, name, email, owner from collaborators
                   inner join users on users.id = collaborators.userid
                   where collaborators.listid = ${req.params.id}
 				          order by owner desc, name asc`

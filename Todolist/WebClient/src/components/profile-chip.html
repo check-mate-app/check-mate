@@ -8,7 +8,7 @@
     .profile-chip-wrapper {
       background: #e0e0e0;
       color: #5f6368;
-      border-radius: 1000px;
+      border-radius: 24px;
       display: inline-block;
       padding: 4px;
     }
@@ -23,24 +23,36 @@
       vertical-align: middle;
     }
 
-    .profile-chip-wrapper .pcw-wrapper img {
+    .profile-chip-wrapper .pcw-wrapper ::slotted(img) {
       width: 24px;
       border-radius: 24px;
-      margin-top: -1px;
-      margin-left: 1px;
+      /* margin-top: -2px; */
+      margin-left: 2px;
+      vertical-align: middle;
+    }
+
+    .profile-chip-wrapper .pcw-wrapper ::slotted(iron-icon) {
+      width: 24px;
+      border-radius: 24px;
+      /* margin-top: -2px; */
+      margin-left: 2px;
+      vertical-align: middle;
+      background: #c8c8c8;
     }
 
     .profile-chip-wrapper .pcw-wrapper span {
       margin: 0 8px;
       font-size: .8em;
       line-height: 24px;
+      vertical-align: middle;
     }
 
     </style>
     <div class="profile-chip-wrapper">
       <span class="pcw-wrapper">
-        <img src="[[avatar]]">
+        <slot name="icon"></slot>
         <span>[[name]]</span>
+        <slot></slot>
       </span>
     </div>
   </template>
