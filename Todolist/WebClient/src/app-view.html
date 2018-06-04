@@ -27,6 +27,7 @@
 <link rel="lazy-import" href="my-view3.html">
 <link rel="lazy-import" href="my-view404.html">
 <link rel="lazy-import" href="list-preferences-view.html">
+<link rel="lazy-import" href="lists-shared-view.html">
 <link rel="import" href="lists-favorites-view.html">
 
 <dom-module id="app-view">
@@ -137,7 +138,7 @@
         </a>
 
 
-        <a name="my-view2" href="[[rootPath]]app/my-view2">
+        <a name="lists-shared-view" href="[[rootPath]]app/lists-shared-view">
             <paper-icon-item>
               <iron-icon icon="mdi:folder-account" item-icon slot="item-icon"></iron-icon><!--
               --><span>Shared with me</span>
@@ -206,6 +207,7 @@
             fallback-selection="my-view404"
             role="main">
           <lists-favorites-view name="lists-favorites-view" route="{{subroute}}" page-title="{{pageTitle}}"></lists-favorites-view>
+          <lists-shared-view name="lists-shared-view" route="{{subroute}}" page-title="{{pageTitle}}"></lists-shared-view>
           <lists-view name="lists-view" route="{{subroute}}" page-title="{{pageTitle}}"></lists-view>
           <items-view name="items-view" route="{{subroute}}" page-title="{{pageTitle}}"></items-view>
           <list-preferences-view name="list-preferences-view" route="{{subroute}}" page-title="{{pageTitle}}"></list-preferences-view>
@@ -277,6 +279,7 @@
 
         if(page == 'lists-view') this.set('pageTitle', "My Lists")
         else if(page == 'lists-favorites-view') this.set('pageTitle', "Favorites")
+        else if(page == 'lists-shared-view') this.set('pageTitle', "Shared with me")
         else if(page == 'list-preferences-view') this.set('pageTitle', "List Details")
         else if(page == 'items-view') this.set('pageTitle', "List Items")
         else if(page == 'login-view') this.set('pageTitle', "Login")

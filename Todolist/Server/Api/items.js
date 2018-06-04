@@ -1,16 +1,5 @@
 module.exports = function(app,db){
 
-  //SHOW ALL items
-  app.get('/api/items',function(req,res){
-    db.all(`SELECT * FROM items`, function(err, rows) {
-      if (err) {
-        console.error(err.message);
-      } else {
-        res.send(rows);
-      }
-    });
-  });
-
   //ADD item
 
   app.post('/api/items', function(req, res) {
@@ -54,9 +43,6 @@ module.exports = function(app,db){
 app.put('/api/items/:id', function(req, res) {
 
   id = req.params.id;
-
-  console.log("should rename item to: " + req.body.content)
-  console.log(req.body)
 
   space = "UPDATE items SET content=" + "'" + req.body.content + "'" + " WHERE id =" + (id.toString());
   db.run(space, function(err) {
