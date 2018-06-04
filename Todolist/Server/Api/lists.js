@@ -7,7 +7,15 @@ module.exports = function (app, db) {
       res.send()
       return
     }
-    db.all(`select l.*, (select count(i.id) from items i where i.listid = l.id ) as items,(select count(i.id) from items i where i.listid = l.id  and i.done = 1) as done from lists l WHERE owner =`+req.session.id+` group by l.id;`, function(err, rows) {
+    db.all(`
+      select l.*,
+      	(select count(i.id) from items i where i.listid = l.id ) as items,
+      	(select count(i.id) from items i where i.listid = l.id  and i.done = 1) as done
+      from lists l
+      inner join collaborators c on c.listid = l.id
+      where c.userid = ${req.session.id} and c.owner = 1 group by l.id;
+
+      `, function(err, rows) {
       if (err) {
         console.error(err.message);
       } else {
@@ -35,7 +43,15 @@ module.exports = function (app, db) {
   //GET LIST BY FAVORITES
   app.get('/api/lists/favorites', function(req, res) {
     id = req.params.id;
-    space = "select l.*, (select count(i.id) from items i where i.listid = l.id ) as items,(select count(i.id) from items i where i.listid = l.id  and i.done = 1) as done from lists l WHERE owner ="+req.session.id+" AND l.favorite = 1 group by l.id;";
+    space = `
+    select l.*,
+      (select count(i.id) from items i where i.listid = l.id ) as items,
+      (select count(i.id) from items i where i.listid = l.id  and i.done = 1) as done
+    from lists l
+    inner join collaborators c on c.listid = l.id
+    where c.userid = ${req.session.id} and c.owner = 1 and l.favorite = 1 group by l.id;
+    `;
+
     db.all(space, function(err, rows) {
       if (err) {console.log(err)} else
       res.send(rows);
@@ -58,6 +74,7 @@ module.exports = function (app, db) {
       inner join collaborators
       where collaborators.userid = '${req.session.id}'
       and collaborators.listid = l.id
+      and collaborators.owner = 0
       group by l.id;
 
       `, function(err, rows) {
@@ -79,12 +96,32 @@ module.exports = function (app, db) {
     from lists l
     left join collaborators on collaborators.listid = l.id
     where
-    (owner = ${req.session.id} or collaborators.userid = ${req.session.id})
+    collaborators.userid = ${req.session.id}
     and l.id = ${req.params.id} group by l.id;
     `;
     db.each(space, function(err, row) {
-      if (err) {console.log(err)}
-      res.send(row);
+
+      if (err) { console.log(err) }
+
+      // Get collaborators
+      if(row.shared == 1) {
+        space = `select name, email, owner from collaborators
+                  inner join users on users.id = collaborators.userid
+                  where collaborators.listid = ${req.params.id}
+				          order by owner desc, name asc`
+
+        db.all(space, function(err, users) {
+          row.users = users;
+          console.log(space);
+          res.send(row);
+        });
+      } else {
+        res.send(row);
+      }
+
+
+
+
     })
   });
 
@@ -100,14 +137,15 @@ module.exports = function (app, db) {
         console.log(err)
       };
     })
-    space = "SELECT * FROM lists WHERE owner ="+req.session.id+" AND name = " + "'" + req.body.name + "'";
-    db.all(space, function(err, rows) {
-      if (err) {
-        console.log(err)
-      };
-      console.log("log");
-      res.send(rows);
-    })
+    // space = "SELECT * FROM lists WHERE owner ="+req.session.id+" AND name = " + "'" + req.body.name + "'";
+    // db.all(space, function(err, rows) {
+    //   if (err) {
+    //     console.log(err)
+    //   };
+    //   console.log("log");
+    //   res.send(rows);
+    // })
+    res.send();
 
   });
 
@@ -120,7 +158,6 @@ inner join lists on items.listid = lists.id
 left join collaborators on collaborators.listid = lists.id
 where items.listid = ${req.params.listid}
 and (
-lists.owner = ${req.session.id} or
 (collaborators.listid = lists.id and collaborators.userid = ${req.session.id})
 )
 `;
@@ -134,19 +171,27 @@ db.all(space,function(err,rows){
 
   //ADD
   app.post('/api/lists', function(req, res) {
-    let space = `INSERT INTO lists(name, icon, owner, color, favorite ) VALUES (?, ?, ?, ?, ?)`;
-    db.run(space, [req.body.name, req.body.icon, req.session.id, req.body.color, req.body.favorite], function(err) {
+    let space = `INSERT INTO lists (name, icon, color, favorite ) VALUES (?, ?, ?, ?)`;
+    db.run(space, [req.body.name, req.body.icon, req.body.color, req.body.favorite], function(err) {
       if (err) {
         console.log(err);
       }
+
+      console.log(this.lastID)
+
+      db.run('insert into collaborators (listid, userid, owner) values (?, ?, 1)',
+            [this.lastID, req.session.id],
+            function(err){ });
+
     });
-    space = "SELECT * FROM lists WHERE name = " + "'" + req.body.name + "'";
-    db.all(space, function(err, rows) {
-      if (err) {
-        console.log(err)
-      };
-      res.send(rows);
-    })
+    // space = "SELECT * FROM lists WHERE name = " + "'" + req.body.name + "'";
+    // db.all(space, function(err, rows) {
+    //   if (err) {
+    //     console.log(err)
+    //   };
+    //   res.send(rows);
+    // })
+    res.send();
   });
 
 

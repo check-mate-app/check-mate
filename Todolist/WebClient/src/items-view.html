@@ -5,6 +5,7 @@
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
 
 <link rel="import" href="shared-styles.html">
+<link rel="import" href="components/profile-chip.html">
 
 <!-- Toolbar -->
 <dom-module id="items-toolbar">
@@ -49,6 +50,10 @@
         display: block;
       }
 
+      .chips {
+        padding: 24px;
+      }
+
     </style>
 
     <!-- route -->
@@ -82,6 +87,7 @@
       url="/api/lists/[[routeData.listid]]"
       method="get"
       handle-as="json"
+      last-response="{{list}}"
       on-response="listLoaded">
     </iron-ajax>
 
@@ -158,6 +164,30 @@
       </paper-icon-item>
     </template>
   </div>
+
+<template is="dom-if" if="{{list.shared}}">
+<div class="chips">
+  <template is="dom-repeat" items="[[list.users]]">
+
+    <template is="dom-if" if="{{item.owner}}">
+      <profile-chip
+        name$="[[item.name]] (owner)"
+        avatar$="http://www.gravatar.com/avatar/[[item.email]].jpg?d=retro">
+      </profile-chip>
+    </template>
+    <template is="dom-if" if="{{!item.owner}}">
+      <profile-chip
+        name="[[item.name]]"
+        avatar$="http://www.gravatar.com/avatar/[[item.email]].jpg?d=retro">
+      </profile-chip>
+    </template>
+
+
+
+
+  </template>
+</div>
+</template>
   <!-- /content -->
   </template>
 
