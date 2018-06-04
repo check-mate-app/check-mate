@@ -25,7 +25,7 @@ module.exports = function(app,db){
        if(rows === undefined || rows.length == 0 ||
           !passwordHash.verify(req.body.password, rows[0].password)) {
          res.status(401);
-         res.send({error: "Username or password wrong.<br>Please try again."});
+         res.send({error: "Username or password wrong."});
          return
        } else {
          req.session.id = rows[0].id;
