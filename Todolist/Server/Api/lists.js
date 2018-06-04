@@ -111,7 +111,6 @@ module.exports = function (app, db) {
 
         db.all(space, function(err, users) {
           row.users = users;
-          console.log(space);
           res.send(row);
         });
       } else {

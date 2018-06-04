@@ -4,12 +4,25 @@ module.exports = function(app,db) {
   app.post('/api/collaborators', function(req, res) {
 
     // @todo: check if user is allowed to add collaborator to list
-    db.run('insert into collaborators (userid, listid, owner) values (?, ?, 0)',
-          [req.body.userid, req.body.listid],
-          function(err){
-            if(err) console.log(err);
-            res.send();
-          });
+
+    db.all(`select id from users where name = '${req.body.user}' or email = '${req.body.user}'`, function(err, rows) {
+
+      if(rows !== undefined && rows.length == 1) {
+        db.run('insert into collaborators (userid, listid, owner) values (?, ?, 0)',
+              [rows[0].id, req.body.listid],
+              function(err){
+                if(err) console.log(err);
+                res.send();
+              });
+      } else {
+        res.status(404);
+        res.send({error: "User not found."});
+      }
+
+    });
+
+
+
   });
 
   app.delete('/api/collaborators', function(req, res) {
