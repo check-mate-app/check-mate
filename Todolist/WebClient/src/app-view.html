@@ -107,6 +107,13 @@
       }
     </style>
 
+    <iron-ajax
+      id="logout"
+      method="post"
+      url="/api/logout"
+      handle-as="json">
+    </iron-ajax>
+
     <app-route
         route="{{route}}"
         pattern="[[rootPath]]:page"
@@ -161,7 +168,7 @@
             </paper-icon-item>
         </a>
 
-        <a name="my-view3" href="[[rootPath]]app/my-view3">
+        <a name="my-view3" on-tap="logout" href="#">
             <paper-icon-item>
               <iron-icon icon="mdi:logout" item-icon slot="item-icon"></iron-icon><!--
               --><span>Logout</span>
@@ -297,6 +304,13 @@
         super.ready()
         //this.pageTitle = "My Lists"
 
+      }
+
+      logout(e) {
+        this.$.logout.generateRequest()
+
+        window.history.pushState({}, null, '/login');
+        window.dispatchEvent(new CustomEvent('location-changed'));
       }
     }
 

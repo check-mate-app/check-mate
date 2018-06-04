@@ -6,7 +6,7 @@
 <link rel="import" href="../bower_components/paper-styles/paper-styles.html">
 <link rel="import" href="shared-styles.html">
 
-<dom-module id="login-view">
+<dom-module id="register-view">
   <template>
     <style include="shared-styles">
 
@@ -93,7 +93,7 @@ max-width: 95vw;
 
     <iron-ajax
       id="login"
-      url="/api/login"
+      url="/api/register"
       method="post"
       content-type="application/json"
       on-response="loginCallback"
@@ -109,15 +109,16 @@ max-width: 95vw;
         <div class="error">[[error]]</div>
       </template>
       <div class="login-form">
-        <h1>Login to Check Mate</h1>
+        <h1>Join Check Mate</h1>
         <form action="login" method="post">
           <paper-input label="Username" value="" id="lv_username"></paper-input>
+          <paper-input label="E-Mail" value="" id="lv_email"></paper-input>
           <paper-input label="Password" value="" id="lv_password" type="password"></paper-input>
 
-          <button on-click="login" type="button" id="lv_login">Login</button>
+          <button on-click="login" type="button" id="lv_login">Register</button>
         </form>
         <br><br>
-        <a href="/register">Register</a>
+        <a href="/login">I already have an account</a>
       </div>
     </div>
     </div>
@@ -125,13 +126,14 @@ max-width: 95vw;
   </template>
 
   <script>
-    class LoginView extends Polymer.Element {
-      static get is() { return 'login-view'; }
+    class RegisterView extends Polymer.Element {
+      static get is() { return 'register-view'; }
 
       login(e) {
         let data = {
           name: this.$.lv_username.value,
-          password: this.$.lv_password.value
+          password: this.$.lv_password.value,
+          email: this.$.lv_email.value
         }
 
         this.$.login.body = data
@@ -141,8 +143,8 @@ max-width: 95vw;
       loginCallback(result) {
         // console.log(result.detail.status)
         // console.log(result)
-
-        window.history.pushState({}, null, '/app');
+        alert('Account created. Please log in.')
+        window.history.pushState({}, null, '/login');
         window.dispatchEvent(new CustomEvent('location-changed'));
         window.dispatchEvent(new CustomEvent('lists-changed'));
       }
@@ -152,11 +154,15 @@ max-width: 95vw;
         // console.log(result.detail.request.response.error)
         this.$.lv_username.value = "";
         this.$.lv_password.value = "";
+        this.$.lv_email.value = "";
 
-        this.error = result.detail.request.response.error
+        if(result.detail.request.status == 409)
+          this.error = "Username or E-Mail already taken."
+        else
+          this.error = result.detail.request.response.error
       }
     }
 
-    window.customElements.define(LoginView.is, LoginView);
+    window.customElements.define(RegisterView.is, RegisterView);
   </script>
 </dom-module>

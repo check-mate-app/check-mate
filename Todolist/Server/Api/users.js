@@ -4,8 +4,7 @@ module.exports = function(app,db){
 
  //login
  app.post('/api/login', function(req, res, next){
-
-   if (req.session.id) {
+   if (req.session.id && req.session.id !== undefined) {
     console.log("User already logged in.");
     res.send();
     } else {
@@ -39,11 +38,28 @@ module.exports = function(app,db){
   });
 
   //logout
-  app.get('/api/logout',function(req,res){
+  app.post('/api/logout',function(req,res){
     //change all sessionvars to null
-    delete req.session.id
+    console.log('logging out...')
+    req.session.reset()
     res.send()
   });
+
+
+  //Add new user   sign up
+  app.post('/api/register', function(req, res) {
+
+    let pw = passwordHash.generate(req.body.password);
+    let query = `INSERT INTO users (name, password, email) VALUES (?, ?, ?)`;
+    db.run(query,[req.body.name,pw,req.body.email], function(err){
+      if (err) {
+        console.log(err)
+        res.status(409)
+        res.send({error: err});
+      } else res.send();
+    });
+  });
+
 
   //Show all users
   app.get('/api/users',function(req, res){
@@ -63,15 +79,7 @@ module.exports = function(app,db){
     });
   });
 
-//Add new user   sign up
-  app.post('/api/users', function(req, res){
-    let pw = passwordHash.generate(req.body.password);
-    let query = `INSERT INTO users (name, password, email) VALUES (?, ?, ?)`;
-    db.run(query,[req.body.name,pw,req.body.email], function(err){
-      if (err) {console.log(err)}
-        res.send([]);
-    });
-  });
+
 
 //Delete user by ID
   app.delete('/api/users/:id',function(req,res){
