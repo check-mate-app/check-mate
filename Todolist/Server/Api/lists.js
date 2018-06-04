@@ -87,6 +87,13 @@ module.exports = function (app, db) {
 
   //GET LIST BY ID
   app.get('/api/lists/:id', function(req, res) {
+
+    if(req.params.id == "new") {
+      res.send({});
+      return;
+    }
+
+
     space = `
     select l.*,
       (select count(i.id) from items i where i.listid = l.id ) as items,
