@@ -1,0 +1,73 @@
+<link rel="import" href="../../bower_components/polymer/polymer-element.html">
+<link rel="import" href="../shared-styles.html">
+
+<dom-module id="profile-chip">
+  <template>
+    <style include="shared-styles">
+
+    .profile-chip-wrapper {
+      background: #e0e0e0;
+      color: #5f6368;
+      border-radius: 24px;
+      display: inline-block;
+      padding: 4px;
+      margin-bottom: 4px;
+    }
+
+    .profile-chip-wrapper .pcw-wrapper {
+      display: inline-block;
+
+    }
+
+    .profile-chip-wrapper .pcw-wrapper * {
+      display: inline-block;
+      vertical-align: middle;
+    }
+
+    .profile-chip-wrapper .pcw-wrapper ::slotted(img) {
+      width: 24px;
+      border-radius: 24px;
+      /* margin-top: -2px; */
+      margin-left: 2px;
+      vertical-align: middle;
+    }
+
+    .profile-chip-wrapper .pcw-wrapper ::slotted(iron-icon) {
+      width: 24px;
+      border-radius: 24px;
+      /* margin-top: -2px; */
+      margin-left: 2px;
+      vertical-align: middle;
+      background: #c8c8c8;
+    }
+
+    .profile-chip-wrapper .pcw-wrapper span {
+      margin: 0 8px;
+      font-size: .8em;
+      line-height: 24px;
+      vertical-align: middle;
+    }
+
+    </style>
+    <div class="profile-chip-wrapper">
+      <span class="pcw-wrapper">
+        <slot name="icon"></slot>
+        <span>[[name]]</span>
+        <slot></slot>
+      </span>
+    </div>
+  </template>
+
+  <script>
+  class ProfileChip extends Polymer.Element {
+    static get is() { return 'profile-chip'; }
+
+    static get properties() { return {
+      name: String,
+      avatar: String
+    }}
+  }
+
+  window.customElements.define(ProfileChip.is, ProfileChip);
+  </script>
+</dom-module>

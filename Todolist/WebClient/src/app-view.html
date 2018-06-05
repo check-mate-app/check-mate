@@ -19,14 +19,18 @@
 <link rel="import" href="components/mdi.html">
 <link rel="import" href="components/profile-switcher.html">
 
+<link rel="import" href="login-view.html">
+
 <link rel="lazy-import" href="lists-view.html">
 <link rel="lazy-import" href="items-view.html">
 <link rel="lazy-import" href="my-view2.html">
 <link rel="lazy-import" href="my-view3.html">
 <link rel="lazy-import" href="my-view404.html">
 <link rel="lazy-import" href="list-preferences-view.html">
+<link rel="lazy-import" href="lists-shared-view.html">
+<link rel="import" href="lists-favorites-view.html">
 
-<dom-module id="my-app">
+<dom-module id="app-view">
   <template>
     <style include="shared-styles">
       :host {
@@ -103,9 +107,12 @@
       }
     </style>
 
-    <app-location
-        route="{{route}}">
-    </app-location>
+    <iron-ajax
+      id="logout"
+      method="post"
+      url="/api/logout"
+      handle-as="json">
+    </iron-ajax>
 
     <app-route
         route="{{route}}"
@@ -122,7 +129,15 @@
 
         <paper-listbox selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation">
 
-        <a name="lists-view" href="[[rootPath]]lists-view">
+
+          <a name="lists-favorites-view" href="[[rootPath]]app/lists-favorites-view">
+              <paper-icon-item>
+                <iron-icon icon="mdi:heart" item-icon slot="item-icon"></iron-icon><!--
+                --><span>Favorites</span>
+              </paper-icon-item>
+          </a>
+
+        <a name="lists-view" href="[[rootPath]]app/lists-view">
             <paper-icon-item>
               <iron-icon icon="mdi:inbox-multiple" item-icon slot="item-icon"></iron-icon><!--
               --><span>My Lists</span>
@@ -130,7 +145,7 @@
         </a>
 
 
-        <a name="my-view2" href="[[rootPath]]my-view2">
+        <a name="lists-shared-view" href="[[rootPath]]app/lists-shared-view">
             <paper-icon-item>
               <iron-icon icon="mdi:folder-account" item-icon slot="item-icon"></iron-icon><!--
               --><span>Shared with me</span>
@@ -139,21 +154,21 @@
 
         <div class="divider"></div>
 
-        <a name="my-view3" href="[[rootPath]]my-view3">
+        <a name="my-view3" href="[[rootPath]]app/my-view3">
             <paper-icon-item>
               <iron-icon icon="mdi:settings" item-icon slot="item-icon"></iron-icon><!--
               --><span>Settings</span>
             </paper-icon-item>
         </a>
 
-        <a name="my-view3" href="[[rootPath]]my-view3">
+        <a name="my-view3" href="[[rootPath]]app/my-view3">
             <paper-icon-item>
               <iron-icon icon="mdi:information" item-icon slot="item-icon"></iron-icon><!--
               --><span>Information</span>
             </paper-icon-item>
         </a>
 
-        <a name="my-view3" href="[[rootPath]]my-view3">
+        <a name="my-view3" on-tap="logout" href="#">
             <paper-icon-item>
               <iron-icon icon="mdi:logout" item-icon slot="item-icon"></iron-icon><!--
               --><span>Logout</span>
@@ -198,6 +213,8 @@
             attr-for-selected="name"
             fallback-selection="my-view404"
             role="main">
+          <lists-favorites-view name="lists-favorites-view" route="{{subroute}}" page-title="{{pageTitle}}"></lists-favorites-view>
+          <lists-shared-view name="lists-shared-view" route="{{subroute}}" page-title="{{pageTitle}}"></lists-shared-view>
           <lists-view name="lists-view" route="{{subroute}}" page-title="{{pageTitle}}"></lists-view>
           <items-view name="items-view" route="{{subroute}}" page-title="{{pageTitle}}"></items-view>
           <list-preferences-view name="list-preferences-view" route="{{subroute}}" page-title="{{pageTitle}}"></list-preferences-view>
@@ -205,6 +222,7 @@
           <my-view3 name="my-view3"></my-view3>
           <my-view404 name="my-view404"></my-view404>
           <my-new-view name="new-view"></my-new-view>
+          <login-view name="login-view"></login-view>
         </iron-pages>
       </app-header-layout>
     </app-drawer-layout>
@@ -215,9 +233,9 @@
     // preventable, allowing for better scrolling performance.
     Polymer.setPassiveTouchGestures(true);
 
-    class MyApp extends Polymer.Element {
+    class AppView extends Polymer.Element {
       static get is() {
-        return 'my-app';
+        return 'app-view';
       }
 
       static get properties() {
@@ -249,7 +267,7 @@
       _routePageChanged(page) {
         // If no page was found in the route data, page will be an empty string.
         // Default to 'lists-view' in that case.
-        this.page = page || 'lists-view';
+        this.page = page || 'lists-favorites-view';
 
         // Close a non-persistent drawer when the page & route are changed.
         if (!this.$.drawer.persistent) {
@@ -267,8 +285,11 @@
           true);
 
         if(page == 'lists-view') this.set('pageTitle', "My Lists")
+        else if(page == 'lists-favorites-view') this.set('pageTitle', "Favorites")
+        else if(page == 'lists-shared-view') this.set('pageTitle', "Shared with me")
         else if(page == 'list-preferences-view') this.set('pageTitle', "List Details")
         else if(page == 'items-view') this.set('pageTitle', "List Items")
+        else if(page == 'login-view') this.set('pageTitle', "Login")
       }
 
       _showPage404() {
@@ -284,8 +305,15 @@
         //this.pageTitle = "My Lists"
 
       }
+
+      logout(e) {
+        this.$.logout.generateRequest()
+
+        window.history.pushState({}, null, '/login');
+        window.dispatchEvent(new CustomEvent('location-changed'));
+      }
     }
 
-    window.customElements.define(MyApp.is, MyApp);
+    window.customElements.define(AppView.is, AppView);
   </script>
 </dom-module>

@@ -2,7 +2,7 @@
 <link rel="import" href="shared-styles.html">
 <link rel="import" href="components/gradient-list-item.html">
 
-<dom-module id="lists-view">
+<dom-module id="lists-shared-view">
   <template>
     <style include="shared-styles">
       :host {
@@ -16,7 +16,7 @@
     <iron-ajax
       id="getLists"
       auto=""
-      url="/api/lists"
+      url="/api/lists/shared"
       method="get"
       handle-as="json"
       last-response="{{lists}}">
@@ -56,8 +56,8 @@
 
 
   <script>
-    class ListsView extends Polymer.Element {
-      static get is() { return 'lists-view'; }
+    class ListsSharedView extends Polymer.Element {
+      static get is() { return 'lists-shared-view'; }
 
       static get properties() { return {
         pageTitle: {
@@ -96,6 +96,6 @@
       }
     }
 
-    window.customElements.define(ListsView.is, ListsView);
+    window.customElements.define(ListsSharedView.is, ListsSharedView);
   </script>
 </dom-module>
