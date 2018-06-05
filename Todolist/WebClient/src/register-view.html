@@ -143,6 +143,10 @@ max-width: 95vw;
       loginCallback(result) {
         // console.log(result.detail.status)
         // console.log(result)
+        this.$.lv_username.value = "";
+        this.$.lv_password.value = "";
+        this.$.lv_email.value = "";
+
         alert('Account created. Please log in.')
         window.history.pushState({}, null, '/login');
         window.dispatchEvent(new CustomEvent('location-changed'));
@@ -152,9 +156,9 @@ max-width: 95vw;
       loginError(result) {
         // console.log(result.detail.request.status)
         // console.log(result.detail.request.response.error)
-        this.$.lv_username.value = "";
+        // this.$.lv_username.value = "";
         this.$.lv_password.value = "";
-        this.$.lv_email.value = "";
+        // this.$.lv_email.value = "";
 
         if(result.detail.request.status == 409)
           this.error = "Username or E-Mail already taken."

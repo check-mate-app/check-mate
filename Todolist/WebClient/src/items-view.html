@@ -247,18 +247,21 @@
       }
 
       addItem(e) {
-        let data = {
-          listid: this.routeData.listid,
-          content: this.$.lpNameSelector.value,
+
+        if(this.$.lpNameSelector.value != "") {
+          let data = {
+            listid: this.routeData.listid,
+            content: this.$.lpNameSelector.value,
+          }
+
+          this.$.lpNameSelector.value = "";
+
+          this.$.addItem.body = data
+
+
+          this.$.addItem.generateRequest()
+          this.$.getItems.generateRequest()
         }
-
-        this.$.lpNameSelector.value = "";
-
-        this.$.addItem.body = data
-        this.$.addItem.generateRequest()
-
-        this.$.getItems.generateRequest()
-
       }
 
       deleteItem(e) {
