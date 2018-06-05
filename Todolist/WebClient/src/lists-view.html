@@ -33,22 +33,30 @@
     <!-- /api -->
 
     <!-- content: -->
-
-<div class="lists-list general-list general-list-link">
-  <template is="dom-repeat" items="[[lists]]">
-  <a href="/app/items-view/[[item.id]]" data-list-id$="[[item.id]]">
-
-  <gradient-list-item
-    name="[[item.name]]"
-    color="[[item.color]]"
-    progress="{{_progress(item.items, item.done)}}">
-    <iron-icon icon="[[item.icon]]" item-icon slot="icon"></iron-icon>
-  </gradient-list-item>
-
-  </a>
-</template>
+<template is="dom-if" if="[[!lists.0.id]]">
+<div class="nothing-addsomething">
+  <iron-icon src="/images/logo/checkmate_b3b3b3-transparent.svg"></iron-icon><br><br>
+  <span>Nothing here. Add your first list with the button in the bottom right corner.</span>
 </div>
+</template>
+<template is="dom-if" if="[[lists]]">
 
+  <div class="lists-list general-list general-list-link">
+    <template is="dom-repeat" items="[[lists]]">
+      <a href="/app/items-view/[[item.id]]" data-list-id$="[[item.id]]">
+
+      <gradient-list-item
+        name="[[item.name]]"
+        color="[[item.color]]"
+        progress="{{_progress(item.items, item.done)}}">
+        <iron-icon icon="[[item.icon]]" item-icon slot="icon"></iron-icon>
+      </gradient-list-item>
+
+      </a>
+    </template>
+  </div>
+
+</template>
 <paper-fab icon="mdi:plus" class="generic-fab" on-click="openAddDialog"></paper-fab>
 
     <!-- /content -->
@@ -63,7 +71,11 @@
         pageTitle: {
                 type: String,
                 notify:true,
-            }
+            },
+        lists: {
+          type: Object,
+          value: null
+        }
       }}
 
       openAddDialog(e) {
