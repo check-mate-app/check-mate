@@ -2,11 +2,9 @@ module.exports = function (app, db) {
 
   //SHOW LISTS
   app.get('/api/lists', function(req, res, next) {
-    if(req.session.id == null) {
-      res.status(401)
-      res.send()
-      return
-    }
+
+    if (req.session.id && req.session.id !== undefined){
+
     db.all(`
       select l.*,
       	(select count(i.id) from items i where i.listid = l.id ) as items,
@@ -22,13 +20,18 @@ module.exports = function (app, db) {
         res.send(rows);
       }
     });
+  }
+  else{  res.status(401)
+    res.send()
+    return
+  }
   });
 
 
 
   ////DELETE
   app.delete('/api/lists/:id', function(req, res) {
-
+    if (req.session.id && req.session.id !== undefined) {
     var id = req.params.id;
     space = "DELETE from lists WHERE owner ="+req.session.id+" AND id =" + (id.toString());
     db.run(space, function(err) {
@@ -37,11 +40,15 @@ module.exports = function (app, db) {
       }
     })
     res.send({})
+  }
+  else{res.status(401);
+       res.send();}
   });
 
 
   //GET LIST BY FAVORITES
   app.get('/api/lists/favorites', function(req, res) {
+    if (req.session.id && req.session.id !== undefined) {
     space = `
     select l.*,
       (select count(i.id) from items i where i.listid = l.id ) as items,
@@ -55,6 +62,11 @@ module.exports = function (app, db) {
       if (err) {console.log(err)} else
       res.send(rows);
     })
+  }
+  else{
+    res.status(401);
+    res.send();
+  }
   });
 
   //SHOW SHARED LISTS
@@ -87,7 +99,7 @@ module.exports = function (app, db) {
 
   //GET LIST BY ID
   app.get('/api/lists/:id', function(req, res) {
-
+    if (req.session.id && req.session.id !== undefined) {
     if(req.params.id == "new") {
       res.send({});
       return;
@@ -128,6 +140,12 @@ module.exports = function (app, db) {
 
 
     })
+  }
+  else{
+    res.status(401);
+    res.send();
+
+  }
   });
 
   //UPDATE
@@ -176,6 +194,7 @@ db.all(space,function(err,rows){
 
   //ADD
   app.post('/api/lists', function(req, res) {
+    if (req.session.id && req.session.id !== undefined) {
     let space = `INSERT INTO lists (name, icon, color, favorite ) VALUES (?, ?, ?, ?)`;
     db.run(space, [req.body.name, req.body.icon, req.body.color, req.body.favorite], function(err) {
       if (err) {
@@ -197,6 +216,11 @@ db.all(space,function(err,rows){
     //   res.send(rows);
     // })
     res.send();
+  }
+  else{
+    res.status(401);
+    res.send();
+  }
   });
 
 

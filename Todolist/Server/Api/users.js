@@ -39,10 +39,14 @@ module.exports = function(app,db){
 
   //logout
   app.post('/api/logout',function(req,res){
-    //change all sessionvars to null
-    console.log('logging out...')
-    req.session.reset()
-    res.send()
+    if (req.session.id && req.session.id !== undefined) {
+      //change all sessionvars to null
+      console.log('logging out...')
+      req.session.reset()
+      res.send()
+    }
+    else{res.status(401);
+         res.send();}
   });
 
 
@@ -80,7 +84,8 @@ module.exports = function(app,db){
   });
 
 
-
+//EVTL SESSION VAR GESCHÜTZT
+// für delete und update
 //Delete user by ID
   app.delete('/api/users/:id',function(req,res){
      id = req.params.id;
