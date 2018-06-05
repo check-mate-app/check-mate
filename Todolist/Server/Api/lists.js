@@ -1,10 +1,18 @@
 module.exports = function (app, db) {
 
   //SHOW LISTS
-  app.get('/api/lists', function(req, res, next) {
-    let tab = req.session.id;
-    console.log("tab: "+tab);
-    db.all(`select l.*, (select count(i.id) from items i where i.listid = l.id ) as items,(select count(i.id) from items i where i.listid = l.id  and i.done = 1) as done from lists l WHERE owner =`+req.session.id+` group by l.id;`, function(err, rows) {
+  app.get('/api/lists', function(req, res) {
+    db.all(`select l.*, (select count(i.id) from items i where i.listid = l.id ) as items,(select count(i.id) from items i where i.listid = l.id  and i.done = 1) as done from lists l group by l.id;`, function(err, rows) {
+      if (err) {
+        console.error(err.message);
+      } else {
+        res.send(rows);
+      }
+    });
+  });
+
+  app.get('/api/lists/favorites', function(req, res) {
+    db.all(`select l.*, (select count(i.id) from items i where i.listid = l.id ) as items,(select count(i.id) from items i where i.listid = l.id  and i.done = 1) as done from lists l where favorite = 1 group by l.id;`, function(err, rows) {
       if (err) {
         console.error(err.message);
       } else {
