@@ -1,0 +1,59 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+<link rel="import" href="shared-styles.html">
+
+<link rel="import" href="app-view.html">
+<link rel="import" href="login-view.html">
+<link rel="import" href="register-view.html">
+
+<dom-module id="check-mate">
+  <template>
+    <style include="shared-styles">
+
+    </style>
+
+    <app-location route="{{route}}"></app-location>
+    <app-route
+        route="{{route}}"
+        pattern="/:page"
+        data="{{routeData}}"
+        tail="{{subroute}}"></app-route>
+
+    <iron-pages
+        selected="[[page]]"
+        attr-for-selected="name"
+        fallback-selection="my-view404"
+        role="main">
+      <app-view name="app" route="{{subroute}}"></app-view>
+      <login-view name="login" route="{{subroute}}"></login-view>
+      <register-view name="register" route="{{subroute}}"></register-view>
+    </iron-pages>
+  </template>
+
+  <script>
+    class CheckMate extends Polymer.Element {
+      static get is() { return 'check-mate'; }
+
+      static get properties() {
+        return {
+          routeData: Object,
+          subroute: Object,
+          // This shouldn't be neccessary, but the Analyzer isn't picking up
+          // Polymer.Element#rootPath
+          rootPath: String,
+        };
+      }
+
+      static get observers() {
+        return [
+          '_routePageChanged(routeData.page)',
+        ];
+      }
+
+      _routePageChanged(page) {
+        this.page = page || 'login';
+      }
+    }
+
+    window.customElements.define(CheckMate.is, CheckMate);
+  </script>
+</dom-module>

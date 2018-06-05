@@ -4,39 +4,62 @@ module.exports = function(app,db){
 
  //login
  app.post('/api/login', function(req, res, next){
-   console.log(req.session.id);
-   if (req.session.id) {
+   if (req.session.id && req.session.id !== undefined) {
     console.log("User already logged in.");
     res.send();
     } else {
 
+     query = 'SELECT id, password FROM users WHERE name ="'+req.body.name+'"';
+     db.all(query, function(err, rows) {
 
-     let pw = req.body.password;
-     let name = req.body.name;
-
-     space = 'SELECT password,id FROM users WHERE name ="'+name+'"';
-     db.each(space,function(err,row){
-       if (err){console.log(err)}
-       console.log(passwordHash.verify(pw, row.password));
-       if(passwordHash.verify(pw, row.password)){
-            req.session.id = row.id;
-            res.send({id: req.session.id});
+       // Return Server Error if something is wrong
+       if (err || rows.length > 1) {
+         res.status(500);
+         res.send({ error: err });
+         return
        }
-       else{
+
+       // Return Unauthorized if user does not exist
+       // or password is wrong
+       if(rows === undefined || rows.length == 0 ||
+          !passwordHash.verify(req.body.password, rows[0].password)) {
          res.status(401);
-         res.send({});
+         res.send({error: "Username or password wrong."});
+         return
+       } else {
+         req.session.id = rows[0].id;
+         res.send({id: req.session.id});
        }
-     })
 
+
+     })
 
      }
   });
 
   //logout
-  app.get('api/logout',function(req,res){
+  app.post('/api/logout',function(req,res){
     //change all sessionvars to null
-    delete req.session.id;
+    console.log('logging out...')
+    req.session.reset()
+    res.send()
   });
+
+
+  //Add new user   sign up
+  app.post('/api/register', function(req, res) {
+
+    let pw = passwordHash.generate(req.body.password);
+    let query = `INSERT INTO users (name, password, email) VALUES (?, ?, ?)`;
+    db.run(query,[req.body.name,pw,req.body.email], function(err){
+      if (err) {
+        console.log(err)
+        res.status(409)
+        res.send({error: err});
+      } else res.send();
+    });
+  });
+
 
   //Show all users
   app.get('/api/users',function(req, res){
@@ -49,28 +72,20 @@ module.exports = function(app,db){
   //Show specific user by specifying ID
   app.get('/api/users/:id', function(req, res){
     let id = req.params.id;
-    space = `SELECT * FROM users WHERE id =` + (id.toString());
-    db.all(space, function(err, rows) {
+    query = `SELECT * FROM users WHERE id =` + (id.toString());
+    db.all(query, function(err, rows) {
       if (err) {console.log(err)}
         res.send(rows);
     });
   });
 
-//Add new user   sign up
-  app.post('/api/users', function(req, res){
-    let pw = passwordHash.generate(req.body.password);
-    let space = `INSERT INTO users (name, password, email) VALUES (?, ?, ?)`;
-    db.run(space,[req.body.name,pw,req.body.email], function(err){
-      if (err) {console.log(err)}
-        res.send([]);
-    });
-  });
+
 
 //Delete user by ID
   app.delete('/api/users/:id',function(req,res){
      id = req.params.id;
-     space = `DELETE FROM users WHERE id =` + (id.toString());
-    db.run(space, function(err){
+     query = `DELETE FROM users WHERE id =` + (id.toString());
+    db.run(query, function(err){
       if (err) {
         console.log(err)
       };
@@ -86,14 +101,14 @@ module.exports = function(app,db){
     let password = req.body.password;
     let email = req.body.email;
 
-    space = `UPDATE users SET name =` + "'" + name + "'" + `, password =` + "'" + password + "'" + `, email =` + "'" + email + "'" + `WHERE id =` + (id.toString());
-    db.all(space, function(err, rows) {
+    query = `UPDATE users SET name =` + "'" + name + "'" + `, password =` + "'" + password + "'" + `, email =` + "'" + email + "'" + `WHERE id =` + (id.toString());
+    db.all(query, function(err, rows) {
       if (err) {
         console.log(err)
       }
     });
-    space = "SELECT * FROM users WHERE id = " + "'" + req.params.id + "'";
-    db.all(space, function(err, rows) {
+    query = "SELECT * FROM users WHERE id = " + "'" + req.params.id + "'";
+    db.all(query, function(err, rows) {
       if (err) {
         console.log(err)
       }

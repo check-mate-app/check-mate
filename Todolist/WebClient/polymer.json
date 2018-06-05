@@ -1,12 +1,13 @@
 {
   "entrypoint": "index.html",
-  "shell": "src/my-app.html",
+  "shell": "src/check-mate.html",
   "fragments": [
+    "src/app-view.html",
+    "src/items-view.html",
+    "src/list-preferences-view.html",
+    "src/lists-favorites-view.html",
     "src/lists-view.html",
-    "src/my-view2.html",
-    "src/my-view3.html",
-    "src/my-new-view.html",
-    "src/my-view404.html"
+    "src/login-view.html"
   ],
   "sources": [
     "images/**/*",

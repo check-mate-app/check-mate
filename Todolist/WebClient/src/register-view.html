@@ -1,0 +1,168 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+
+<link rel="import" href="../bower_components/paper-checkbox/paper-checkbox.html">
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/paper-styles/paper-styles.html">
+<link rel="import" href="shared-styles.html">
+
+<dom-module id="register-view">
+  <template>
+    <style include="shared-styles">
+
+    :root {
+        /* Label and underline color when the input is not focused */
+        --paper-input-container-color: rgba(255,255,255,0.4);
+
+        /* Label and underline color when the input is focused */
+        --paper-input-container-focus-color: rgba(255,255,255,0.9);
+
+        /* Label and underline color when the input is invalid */
+        --paper-input-container-invalid-color: rgba(255,0,0,0.4);
+
+        /* Input foreground color */
+        --paper-input-container-input-color: #fff;
+    }
+
+
+    .logo_wrapper {
+      width: 100%;
+      padding: 30px;
+      background: rgba(255, 255, 255, 0.07);
+      text-align: center;
+
+      box-sizing: border-box;
+    }
+
+    .error:not(:empty) {
+      padding: 40px;
+      background: #de5c5c;
+    }
+
+    .login-wrapper {
+      text-align: center;
+      height: 100vh;
+      background: #fff;
+    }
+
+    .login-content {
+      color: #fff;
+      background: var(--check-mate-primary);
+      display: inline-block;
+      text-align: left;
+      margin: 0 auto;
+      margin-top: 10vh;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+      width: 300px;
+
+max-width: 95vw;
+    }
+    .login-content img {
+      width: 100px;
+    }
+    .login-content a {
+      color: rgba(0, 0, 0, 0.4);
+    }
+    .login-content h1 {
+      padding: 0;
+      margin: 0;
+      font-size: 1.5em;
+      margin-bottom: 20px;
+      margin-top: 30px;
+      color: #fff;
+    }
+
+    .login-form {
+      padding: 40px;
+      padding-top: 0;
+    }
+
+    #lv_login {
+      margin: 0;
+      padding: 0;
+      border: 0;
+      background: none;
+      color: #fff;
+      text-transform: uppercase;
+      font-weight: bold;
+      margin-top: 20px;
+    }
+
+
+    </style>
+
+    <iron-ajax
+      id="login"
+      url="/api/register"
+      method="post"
+      content-type="application/json"
+      on-response="loginCallback"
+      on-error="loginError"
+      handle-as="json">
+    </iron-ajax>
+
+    <div class="login-wrapper">
+    <div class="login-content" id="content">
+      <div class="logo_wrapper" id="logo_wrapper"><img src="[[rootPath]]images/logo/checkmate_white-transparent.svg"></div>
+
+      <template is="dom-if" if="{{error}}">
+        <div class="error">[[error]]</div>
+      </template>
+      <div class="login-form">
+        <h1>Join Check Mate</h1>
+        <form action="login" method="post">
+          <paper-input label="Username" value="" id="lv_username"></paper-input>
+          <paper-input label="E-Mail" value="" id="lv_email"></paper-input>
+          <paper-input label="Password" value="" id="lv_password" type="password"></paper-input>
+
+          <button on-click="login" type="button" id="lv_login">Register</button>
+        </form>
+        <br><br>
+        <a href="/login">I already have an account</a>
+      </div>
+    </div>
+    </div>
+
+  </template>
+
+  <script>
+    class RegisterView extends Polymer.Element {
+      static get is() { return 'register-view'; }
+
+      login(e) {
+        let data = {
+          name: this.$.lv_username.value,
+          password: this.$.lv_password.value,
+          email: this.$.lv_email.value
+        }
+
+        this.$.login.body = data
+        this.$.login.generateRequest()
+      }
+
+      loginCallback(result) {
+        // console.log(result.detail.status)
+        // console.log(result)
+        alert('Account created. Please log in.')
+        window.history.pushState({}, null, '/login');
+        window.dispatchEvent(new CustomEvent('location-changed'));
+        window.dispatchEvent(new CustomEvent('lists-changed'));
+      }
+
+      loginError(result) {
+        // console.log(result.detail.request.status)
+        // console.log(result.detail.request.response.error)
+        this.$.lv_username.value = "";
+        this.$.lv_password.value = "";
+        this.$.lv_email.value = "";
+
+        if(result.detail.request.status == 409)
+          this.error = "Username or E-Mail already taken."
+        else
+          this.error = result.detail.request.response.error
+      }
+    }
+
+    window.customElements.define(RegisterView.is, RegisterView);
+  </script>
+</dom-module>

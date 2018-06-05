@@ -36,7 +36,7 @@
 
 <div class="lists-list general-list general-list-link">
   <template is="dom-repeat" items="[[lists]]">
-  <a href="/items-view/[[item.id]]" data-list-id$="[[item.id]]">
+  <a href="/app/items-view/[[item.id]]" data-list-id$="[[item.id]]">
 
   <gradient-list-item
     name="[[item.name]]"
@@ -67,7 +67,7 @@
       }}
 
       openAddDialog(e) {
-        window.history.pushState({}, null, '/list-preferences-view/new');
+        window.history.pushState({}, null, '/app/list-preferences-view/new');
         window.dispatchEvent(new CustomEvent('location-changed'));
       }
 

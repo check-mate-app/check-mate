@@ -16,8 +16,8 @@ const session = require('client-sessions');
 app.use(session({
   secret: 'quatrocoptolopis',
   cookieName: 'session',
-  duration: 86400,
-  activeDuration: 1000*60*5
+  duration: 86400000, // cookie is active for one day
+  activeDuration: 1000*60*30 // 30mins are added if active
 }));
 
 

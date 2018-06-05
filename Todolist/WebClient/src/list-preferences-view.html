@@ -1,4 +1,7 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
+=======
+>>>>>>> 1bdc30cea428ad0bb4a1583369ccd96ab9891d0f
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../bower_components/paper-checkbox/paper-checkbox.html">
 <link rel="import" href="../bower_components/paper-input/paper-input.html">
@@ -113,7 +116,8 @@
       url="/api/lists/[[routeData.listid]]"
       method="put"
       content-type="application/json"
-      handle-as="json">
+      handle-as="json"
+      on-response="listRequestCallback">
     </iron-ajax>
 
     <iron-ajax
@@ -121,7 +125,8 @@
       url="/api/lists"
       method="post"
       content-type="application/json"
-      handle-as="json">
+      handle-as="json"
+      on-response="listRequestCallback">
     </iron-ajax>
     <!-- /api -->
 
@@ -224,7 +229,6 @@
             name: this.$.lpNameSelector.value,
             icon: this.$.lpIconSelector.selected,
             color: this.$.lpColorSelector.selected,
-            owner: "vigonotion",
             favorite: this.$.lpFavoriteCheckbox.checked ? 1 : 0
           }
 
@@ -242,17 +246,20 @@
           this.$.updateList.generateRequest()
         }
 
+      }
+
+      listRequestCallback(e) {
         window.dispatchEvent(new CustomEvent('lists-changed'));
 
-        window.history.pushState({}, null, '/lists-view');
+        window.history.pushState({}, null, '/app/lists-view');
         window.dispatchEvent(new CustomEvent('location-changed'));
-
       }
 
     }
 
     window.customElements.define(ListPreferencesView.is, ListPreferencesView);
   </script>
+<<<<<<< HEAD
 </dom-module>
 <link rel="import" href="../bower_components/polymer/polymer-element.html">
 <link rel="import" href="../bower_components/paper-checkbox/paper-checkbox.html">
@@ -498,3 +505,6 @@
   </script>
 </dom-module>
 >>>>>>> Development-Nick
+=======
+</dom-module>
+>>>>>>> 1bdc30cea428ad0bb4a1583369ccd96ab9891d0f
