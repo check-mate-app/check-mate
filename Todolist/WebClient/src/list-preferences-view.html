@@ -220,17 +220,14 @@
       }
 
       saveChanges(e) {
-        if (this.routeData.listid == "new") {
-          let data = {
-            name: this.$.lpNameSelector.value,
-            icon: this.$.lpIconSelector.selected,
-            color: this.$.lpColorSelector.selected,
-            favorite: this.$.lpFavoriteCheckbox.checked ? 1 : 0
-          }
 
-          this.$.addList.body = data
-          this.$.addList.generateRequest()
+        if(this.$.lpNameSelector.value === undefined ||
+           this.$.lpIconSelector.selected === undefined ||
+           this.$.lpColorSelector.selected === undefined) {
+
+          alert("Please fill out all the fields (have you selected a color and an icon?)")
         } else {
+
           let data = {
             name: this.$.lpNameSelector.value,
             icon: this.$.lpIconSelector.selected,
@@ -238,9 +235,15 @@
             favorite: this.$.lpFavoriteCheckbox.checked ? 1 : 0
           }
 
-          this.$.updateList.body = data
-          this.$.updateList.generateRequest()
+          if (this.routeData.listid == "new") {
+            this.$.addList.body = data
+            this.$.addList.generateRequest()
+          } else {
+            this.$.updateList.body = data
+            this.$.updateList.generateRequest()
+          }
         }
+
 
       }
 
