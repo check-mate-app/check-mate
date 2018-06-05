@@ -142,12 +142,10 @@ max-width: 95vw;
         // console.log(result.detail.status)
         // console.log(result)
 
-        this.$.lv_username.value = "";
-        this.$.lv_password.value = "";
-
         window.history.pushState({}, null, '/app');
         window.dispatchEvent(new CustomEvent('location-changed'));
         window.dispatchEvent(new CustomEvent('lists-changed'));
+        window.dispatchEvent(new CustomEvent('user-changed'));
       }
 
       loginError(result) {

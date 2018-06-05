@@ -130,19 +130,26 @@ max-width: 95vw;
       static get is() { return 'register-view'; }
 
       login(e) {
-        let data = {
-          name: this.$.lv_username.value,
-          password: this.$.lv_password.value,
-          email: this.$.lv_email.value
-        }
 
-        this.$.login.body = data
-        this.$.login.generateRequest()
+        if(this.$.lv_username.value == "" || this.$.lv_password.value == "" || this.$.lv_email.value == "") {
+
+          this.error = "Please fill out all fields."
+
+        } else {
+
+          let data = {
+            name: this.$.lv_username.value,
+            password: this.$.lv_password.value,
+            email: this.$.lv_email.value
+          }
+
+          this.$.login.body = data
+          this.$.login.generateRequest()
+
+        }
       }
 
       loginCallback(result) {
-        // console.log(result.detail.status)
-        // console.log(result)
         this.$.lv_username.value = "";
         this.$.lv_password.value = "";
         this.$.lv_email.value = "";
