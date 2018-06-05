@@ -276,17 +276,22 @@
       renameItem(e) {
         let target = e.model
 
-        let renamedText = prompt("Enter new name for this item:")
-        let data = {
-          content: renamedText
+        let renamedText = prompt("Enter new name for this item:", target.item.content)
+
+        if(renamedText != null) {
+          let data = {
+            content: renamedText
+          }
+
+          this.$.renameItem.body = data
+
+          this.$.renameItem.url = "/api/items/" + target.item.id
+          this.$.renameItem.generateRequest()
+
+          this.$.getItems.generateRequest()
         }
 
-        this.$.renameItem.body = data
 
-        this.$.renameItem.url = "/api/items/" + target.item.id
-        this.$.renameItem.generateRequest()
-
-        this.$.getItems.generateRequest()
       }
 
       deleteCollaborator(e) {
