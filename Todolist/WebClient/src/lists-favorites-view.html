@@ -33,6 +33,13 @@
     <!-- /api -->
 
     <!-- content: -->
+    <template is="dom-if" if="[[!lists.0.id]]">
+    <div class="nothing-addsomething">
+      <iron-icon src="/images/logo/checkmate_b3b3b3-transparent.svg"></iron-icon><br><br>
+      <span>Nothing here. You can add favorites by editing a list under <i>My Lists</i>.</span>
+    </div>
+    </template>
+    <template is="dom-if" if="[[lists]]">
 
 <div class="lists-list general-list general-list-link">
   <template is="dom-repeat" items="[[lists]]">
@@ -48,7 +55,7 @@
   </a>
 </template>
 </div>
-
+</template>
 <paper-fab icon="mdi:plus" class="generic-fab" on-click="openAddDialog"></paper-fab>
 
     <!-- /content -->

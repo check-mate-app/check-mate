@@ -114,6 +114,14 @@
       handle-as="json">
     </iron-ajax>
 
+    <iron-ajax
+      id="user"
+      method="get"
+      url="/api/users/me"
+      last-response="{{user}}"
+      handle-as="json">
+    </iron-ajax>
+
     <app-route
         route="{{route}}"
         pattern="[[rootPath]]:page"
@@ -124,7 +132,7 @@
     <app-drawer-layout fullbleed narrow="{{narrow}}">
       <!-- Drawer content -->
       <app-drawer id="drawer" slot="drawer" swipe-open="[[narrow]]">
-        <profile-switcher name="John Doe">
+        <profile-switcher name="{{user.name}}">
         </profile-switcher>
 
         <paper-listbox selected="[[page]]" attr-for-selected="name" class="drawer-list" role="navigation">
@@ -311,6 +319,22 @@
 
         window.history.pushState({}, null, '/login');
         window.dispatchEvent(new CustomEvent('location-changed'));
+        window.dispatchEvent(new CustomEvent('user-changed'));
+      }
+
+      user(e) {
+        this.$.user.generateRequest()
+        console.log(this.user);
+      }
+
+      connectedCallback() {
+        super.connectedCallback();
+        window.addEventListener('user-changed', this.user.bind(this));
+      }
+
+      disconnectedCallback() {
+        super.disconnectedCallback();
+        window.removeEventListener('user-changed', this.user.bind(this));
       }
     }
 

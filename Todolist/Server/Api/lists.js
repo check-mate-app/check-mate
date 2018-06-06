@@ -33,7 +33,7 @@ module.exports = function (app, db) {
   app.delete('/api/lists/:id', function(req, res) {
     if (req.session.id && req.session.id !== undefined) {
     var id = req.params.id;
-    space = "DELETE from lists WHERE owner ="+req.session.id+" AND id =" + (id.toString());
+    space = "DELETE from lists WHERE id =" + (id.toString());
     db.run(space, function(err) {
       if (err) {
         console.log(err)

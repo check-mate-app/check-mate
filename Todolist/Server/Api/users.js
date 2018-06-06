@@ -76,10 +76,16 @@ module.exports = function(app,db){
   //Show specific user by specifying ID
   app.get('/api/users/:id', function(req, res){
     let id = req.params.id;
-    query = `SELECT * FROM users WHERE id =` + (id.toString());
+
+    if(id == "me") {
+      id = req.session.id;
+    }
+
+    console.log(id);
+    query = `SELECT id, name, email FROM users WHERE id =` + (id.toString());
     db.all(query, function(err, rows) {
-      if (err) {console.log(err)}
-        res.send(rows);
+      if (err) { console.log(err) }
+        res.send(rows[0]);
     });
   });
 
