@@ -1,0 +1,161 @@
+<link rel="import" href="../bower_components/polymer/polymer-element.html">
+
+<link rel="import" href="../bower_components/paper-checkbox/paper-checkbox.html">
+<link rel="import" href="../bower_components/paper-input/paper-input.html">
+<link rel="import" href="../bower_components/paper-button/paper-button.html">
+<link rel="import" href="../bower_components/paper-styles/paper-styles.html">
+<link rel="import" href="shared-styles.html">
+
+<dom-module id="demo-view">
+  <template>
+    <style include="shared-styles">
+
+    :root {
+        /* Label and underline color when the input is not focused */
+        --paper-input-container-color: rgba(255,255,255,0.4);
+
+        /* Label and underline color when the input is focused */
+        --paper-input-container-focus-color: rgba(255,255,255,0.9);
+
+        /* Label and underline color when the input is invalid */
+        --paper-input-container-invalid-color: rgba(255,0,0,0.4);
+
+        /* Input foreground color */
+        --paper-input-container-input-color: #fff;
+    }
+
+
+    .logo_wrapper {
+      width: 100%;
+      padding: 30px;
+      background: rgba(255, 255, 255, 0.07);
+      text-align: center;
+
+      box-sizing: border-box;
+    }
+
+    .error:not(:empty) {
+      padding: 40px;
+      background: #de5c5c;
+    }
+
+    .demo-wrapper {
+      text-align: center;
+      height: 100vh;
+      background: #fff;
+    }
+
+    .demo-content {
+      color: #fff;
+      background: var(--check-mate-primary);
+      display: inline-block;
+      text-align: left;
+      margin: 0 auto;
+      margin-top: 10vh;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+      width: 300px;
+
+max-width: 95vw;
+    }
+    .demo-content img {
+      width: 100px;
+    }
+    .demo-content a {
+      color: rgba(0, 0, 0, 0.4);
+    }
+    .demo-content h1 {
+      padding: 0;
+      margin: 0;
+      font-size: 1.5em;
+      margin-bottom: 20px;
+      margin-top: 30px;
+      color: #fff;
+    }
+
+    .demo-form {
+      padding: 40px;
+      padding-top: 0;
+    }
+
+    #lv_demo {
+      margin: 0;
+      padding: 0;
+      border: 0;
+      background: none;
+      color: #fff;
+      text-transform: uppercase;
+      font-weight: bold;
+      margin-top: 20px;
+    }
+
+
+    </style>
+
+    <iron-ajax
+      id="demo"
+      url="/api/demo"
+      method="post"
+      content-type="application/json"
+      on-response="demoCallback"
+      on-error="demoError"
+      handle-as="json">
+    </iron-ajax>
+
+    <div class="demo-wrapper">
+    <div class="demo-content" id="content">
+      <div class="logo_wrapper" id="logo_wrapper"><img src="[[rootPath]]images/logo/checkmate_white-transparent.svg"></div>
+
+      <template is="dom-if" if="{{error}}">
+        <div class="error">[[error]]</div>
+      </template>
+      <div class="demo-form">
+        <h1>Welcome to Check Mate</h1>
+
+        <div>
+          This is a demonstration of the app. Choose a username and explore Check Mate!
+        </div>
+
+        <form action="demo" method="post">
+          <paper-input label="Username" value="" id="lv_username"></paper-input>
+          <button on-click="demo" type="button" id="lv_demo">Start Demo Session</button>
+        </form>
+        <br><br>
+        <a href="/register">Register</a>
+        <br>
+        <a href="/login">Login</a>
+      </div>
+    </div>
+    </div>
+
+  </template>
+
+  <script>
+    class demoView extends Polymer.Element {
+      static get is() { return 'demo-view'; }
+
+      demo(e) {
+        let data = {
+          name: this.$.lv_username.value,
+        }
+
+        this.$.demo.body = data
+        this.$.demo.generateRequest()
+      }
+
+      demoCallback(result) {
+        window.history.pushState({}, null, '/app');
+        window.dispatchEvent(new CustomEvent('location-changed'));
+        window.dispatchEvent(new CustomEvent('lists-changed'));
+        window.dispatchEvent(new CustomEvent('user-changed'));
+      }
+
+      demoError(result) {
+        this.$.lv_username.value = "";
+
+        this.error = result.detail.request.response.error
+      }
+    }
+
+    window.customElements.define(demoView.is, demoView);
+  </script>
+</dom-module>

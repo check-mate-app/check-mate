@@ -64,6 +64,73 @@ module.exports = function(app,db){
     });
   });
 
+    //Add new demo user   sign up and login! (demo)
+    app.post('/api/demo', function(req, res) {
+
+      let pw = passwordHash.generate("password");
+      let query = `INSERT INTO users (name, password, email) VALUES (?, ?, ?)`;
+
+      console.log(req.body.name);
+
+      let tempmail = req.body.name.replace(/ /g,'').toLowerCase() + "@check-mate.app";
+
+      db.run(query,[req.body.name,pw,tempmail], function(err) {
+        if (err) {
+          console.log(err)
+          res.status(409)
+          res.send({error: "Username already taken. Try another one!"});
+        } else {
+
+          // Create a demo shopping list (as favorite)
+          
+          req.session.id = this.lastID;
+
+          let space = `INSERT INTO lists (name, icon, color, favorite ) VALUES (?, ?, ?, ?)`;
+          db.run(space, ["Shopping List", "mdi:cart", 7, 1], function(err) {
+            if (err) {
+              console.log(err);
+            }
+
+            let demolist = this.lastID;
+
+            // mark as owner
+            db.run('insert into collaborators (listid, userid, owner) values (?, ?, 1)',
+                  [demolist, req.session.id],
+                  function(err){ });
+
+            // add some entries
+            let space = `INSERT INTO items(listid, content, done) VALUES
+              (${demolist}, 'Soda', 1),
+              (${demolist}, 'Bananas', 0),
+              (${demolist}, 'Apples', 0),
+              (${demolist}, 'Bread', 0),
+              (${demolist}, 'Margarine', 0),
+              (${demolist}, 'Chives', 1),
+              (${demolist}, 'Onions', 0),
+              (${demolist}, 'Chips', 0),
+              (${demolist}, 'Coke', 0),
+              (${demolist}, 'Toilet Paper', 0),
+              (${demolist}, 'Soap', 0),
+              (${demolist}, 'Toothbrush', 0),
+              (${demolist}, 'Paper', 0),
+              (${demolist}, 'Ink', 0),
+              (${demolist}, 'Noodles', 0),
+              (${demolist}, 'Cookies', 0),
+              (${demolist}, 'Corn', 1)
+            `;
+            db.run(space, function(err, row) {
+              if (err) {
+                console.log(err)
+              }
+            });
+        
+          // /end demo shopping list
+          res.send({id: req.session.id});
+        });
+      }
+      
+      });
+    });
 
   //Show all users
   app.get('/api/users',function(req, res){

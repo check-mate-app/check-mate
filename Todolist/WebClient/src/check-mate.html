@@ -4,6 +4,7 @@
 <link rel="import" href="app-view.html">
 <link rel="import" href="login-view.html">
 <link rel="import" href="register-view.html">
+<link rel="import" href="demo-view.html">
 
 <dom-module id="check-mate">
   <template>
@@ -26,6 +27,7 @@
       <app-view name="app" route="{{subroute}}"></app-view>
       <login-view name="login" route="{{subroute}}"></login-view>
       <register-view name="register" route="{{subroute}}"></register-view>
+      <demo-view name="demo" route="{{subroute}}"></demo-view>
     </iron-pages>
   </template>
 
@@ -50,7 +52,7 @@
       }
 
       _routePageChanged(page) {
-        this.page = page || 'login';
+        this.page = page || 'demo';
       }
     }
 
